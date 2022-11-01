@@ -5,20 +5,20 @@ USE IEEE.numeric_std.ALL;
 ENTITY control_unit IS
   PORT (
     instr_reg   		: IN std_logic_vector(7 DOWNTO 0); --input instruction
-    debug    			: IN std_logic_vector(2 DOWNTO 0); --buttons to debug the processor
+    debug    			: IN std_logic_vector(2 DOWNTO 0); --buttons to debug the processor this is only used when debugging is turned on. when debug(2) is 1 then it runs normally. When debug(1) is pressed it will run for 1 clock cycle. debug(0) is used to display other values on the 4 7 segment displays.
     status_bit_reg		: IN std_logic; -- Input status bit
     clk     			: IN std_logic; --50 Mhz clock
     reset				: IN std_logic; --asynchronous reset
 
-    demux_mem 			: OUT std_logic;
+    demux_mem 			: OUT std_logic; 
     demux_A				: OUT std_logic;
     demux_B				: OUT std_logic_vector (1 DOWNTO 0);
 
     mux_mem				: OUT std_logic_vector (1 DOWNTO 0);
     mux_reg				: OUT std_logic_vector (1 DOWNTO 0);
 
-    address_add 		: OUT std_logic_vector (1 DOWNTO 0);	--adder
-    enable_instr 		: OUT std_logic; 						--instruction
+    address_add 		: OUT std_logic_vector (1 DOWNTO 0);
+    enable_instr 		: OUT std_logic; 						
     enable_status_bit 	: OUT std_logic;
 
     alu_instr			: OUT std_logic_vector (2 DOWNTO 0);
@@ -26,7 +26,9 @@ ENTITY control_unit IS
 
     rw_reg_off			: OUT std_logic_vector (1 DOWNTO 0);
     address_A_reg		: OUT std_logic_vector (3 DOWNTO 0);
-    address_B_reg		: OUT std_logic_vector (3 DOWNTO 0)
+    address_B_reg		: OUT std_logic_vector (3 DOWNTO 0);
+	
+	enable_reg 			: OUT std_logic --1 when it is in wait mode and 0 when it is in run mode
     
   );
 END ENTITY control_unit;
@@ -137,11 +139,33 @@ begin
 	end case;
 	end control_lines_prep;
 	
-		
+	--procedure that outputs the found control lines 
+	procedure update_outputs(control_lines: std_logic_vector(27 downto 0)) is 
+	begin
+		demux_mem 			<= control_lines(27);
+		demux_A 			<= control_lines(26);
+		demux_B 			<= control_lines(25 downto 24);
+		mux_mem 			<= control_lines(23 downto 22);
+		mux_reg 			<= control_lines(21 downto 20);
+		address_add 		<= control_lines(19 downto 18);
+		enable_instr 		<= control_lines(17);
+		enable_status_bit 	<= control_lines(16);
+		alu_instr 			<= control_lines(15 downto 13);
+		rw_mem_off 			<= control_lines(12 downto 11);
+		rw_reg_off 			<= control_lines (10 downto 9);
+		address_A_reg 		<= control_lines(8 downto 5);
+		address_B_reg 		<= control_lines (4 downto 1);
+	end update_outputs;
+
 	TYPE STATES IS (PREP, RUN_INSTR);
     VARIABLE curr_state: states;
 	VARIABLE curr_clock_cycle: integer range 1 to 5 := 1;
 	VARIABLE control_lines: std_logic_vector (27 downto 0) := "----------------------------";
+	
+	variable previous_debug1 : std_logic := '1'; --active LOW
+	variable gotonextcycle : std_logic := '0'; --active HIGH
+	
+	CONSTANT debugging_onoff : std_logic := '1'; -- 1 means debugging is on and 0 means debugging is off
 	
   BEGIN
     IF reset='0' THEN
@@ -150,63 +174,59 @@ begin
 		curr_clock_cycle := 1;
 		curr_state := PREP;	
 		control_lines := (others =>	'0');
-		demux_mem 			<= control_lines(27);
-		demux_A 			<= control_lines(26);
-		demux_B 			<= control_lines(25 downto 24);
-		mux_mem 			<= control_lines(23 downto 22);
-		mux_reg 			<= control_lines(21 downto 20);
-		address_add 		<= control_lines(19 downto 18);
-		enable_instr 		<= control_lines(17);
-		enable_status_bit 	<= control_lines(16);
-		alu_instr 			<= control_lines(15 downto 13);
-		rw_mem_off 			<= control_lines(12 downto 11);
-		rw_reg_off 			<= control_lines (10 downto 9);
-		address_A_reg 		<= control_lines(8 downto 5);
-		address_B_reg 		<= control_lines (4 downto 1);
+		update_outputs(control_lines);
 		
     ELSIF rising_edge(clk) THEN
 		
-		case curr_state is
-			WHEN PREP =>
-				control_lines := control_lines_prep(curr_clock_cycle);
-
-				IF  (control_lines(0) = '1') THEN
-					curr_state := RUN_INSTR;
-					curr_clock_cycle := 1;
-				ELSE
-					curr_clock_cycle := curr_clock_cycle + 1;
-				END IF;
+		--find rising edge of debug button debug(1)
+		if (debug(1) = '0' AND previous_debug1 = '1') THEN 
+			gotonextcycle := '1';
+		end if;
+		
+		--in normal operation without debugging it works no matter what. when debugging is off the debug(2) button can be pressed to make it run normally. When this debug(2) button is not pressed and the debugging is off the debug(1) button can be pressed to execute one clock cycle.
+		if ((NOT debug(2)) or (not debugging_onoff) or gotonextcycle) = '1' then			
+			enable_reg <= '0'; --enable registers for normal operations (register A, B, C and LOAD)
+			case curr_state is
+				WHEN PREP =>
+					--find control lines output using the current clock cycle
+					control_lines := control_lines_prep(curr_clock_cycle);
+					
+					--go to next state or add 1 to clock cycle
+					IF  (control_lines(0) = '1') THEN
+						curr_state := RUN_INSTR;
+						curr_clock_cycle := 1;
+					ELSE
+						curr_clock_cycle := curr_clock_cycle + 1;
+					END IF;
 				
-			WHEN RUN_INSTR =>
-				control_lines := control_lines_instr(instr_reg, curr_clock_cycle, status_bit_reg);
-			
-				IF  (control_lines(0) = '1') THEN
-					curr_state := PREP;
+				WHEN RUN_INSTR =>
+					--find control lines output using the current clock cycle
+					control_lines := control_lines_instr(instr_reg, curr_clock_cycle, status_bit_reg);
+				
+					--go to next state or add 1 to clock cycle
+					IF  (control_lines(0) = '1') THEN
+						curr_state := PREP;
+						curr_clock_cycle := 1;
+					ELSE
+						curr_clock_cycle := curr_clock_cycle + 1;
+					END IF;
+					
+				WHEN OTHERS =>
+					--when unspecified behaviour occurs reset the processor
 					curr_clock_cycle := 1;
-				ELSE
-					curr_clock_cycle := curr_clock_cycle + 1;
-				END IF;
-			WHEN OTHERS =>
-				curr_clock_cycle := 1;
-				curr_state := PREP;
-				control_lines := (others =>	'0');
-		END CASE;
+					curr_state := PREP;
+					control_lines := (others =>	'0');
+			END CASE;
+			
+			--output all the values (convert 28 bit vector to smaller ones)
+			update_outputs(control_lines);
+		end if;
 		
-		--output all the values (convert 28 bit vector to smaller ones)
-		demux_mem 			<= control_lines(27);
-		demux_A 			<= control_lines(26);
-		demux_B 			<= control_lines(25 downto 24);
-		mux_mem 			<= control_lines(23 downto 22);
-		mux_reg 			<= control_lines(21 downto 20);
-		address_add 		<= control_lines(19 downto 18);
-		enable_instr 		<= control_lines(17);
-		enable_status_bit 	<= control_lines(16);
-		alu_instr 			<= control_lines(15 downto 13);
-		rw_mem_off 			<= control_lines(12 downto 11);
-		rw_reg_off 			<= control_lines (10 downto 9);
-		address_A_reg 		<= control_lines(8 downto 5);
-		address_B_reg 		<= control_lines (4 downto 1);
-		
+		--
+		enable_reg <= '1'; --disable registers so no normal operation (A, B, c and LOAD)
+		previous_debug1 := debug(1); --update previousdebug value
+		gotonextcycle := '0'; --make the variable 0 again.
+
     END IF;
 	
   END PROCESS;
