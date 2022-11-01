@@ -200,15 +200,19 @@ begin
 					END IF;
 				
 				WHEN RUN_INSTR =>
-					--find control lines output using the current clock cycle
-					control_lines := control_lines_instr(instr_reg, curr_clock_cycle, status_bit_reg);
-				
-					--go to next state or add 1 to clock cycle
-					IF  (control_lines(0) = '1') THEN
-						curr_state := PREP;
-						curr_clock_cycle := 1;
-					ELSE
-						curr_clock_cycle := curr_clock_cycle + 1;
+					IF instr_reg /= X"FF" THEN
+						--find control lines output using the current clock cycle
+						control_lines := control_lines_instr(instr_reg, curr_clock_cycle, status_bit_reg);
+					
+						--go to next state or add 1 to clock cycle
+						IF  (control_lines(0) = '1') THEN
+							curr_state := PREP;
+							curr_clock_cycle := 1;
+						ELSE
+							curr_clock_cycle := curr_clock_cycle + 1;
+						END IF;
+					ELSE 
+						control_lines := (others =>	'0');
 					END IF;
 					
 				WHEN OTHERS =>
