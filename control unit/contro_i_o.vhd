@@ -169,7 +169,8 @@ begin
 				
 		END CASE;
 		
-		
+		--output all the values (convert 28 bit vector to smaller ones)
+		demux_mem <= control_lines(27);
 		
     END IF;
 	
