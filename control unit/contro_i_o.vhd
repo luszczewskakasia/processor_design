@@ -152,7 +152,7 @@ begin
 			WHEN PREP =>
 				control_lines := control_lines_prep(curr_clock_cycle);
 				
-				IF  (control_lines(0) = 1) THEN
+				IF  (control_lines(0) = '1') THEN
 					curr_state := RUN_INSTR;
 				ELSE
 					curr_clock_cycle := curr_clock_cycle + 1;
@@ -160,17 +160,27 @@ begin
 				
 			WHEN RUN_INSTR =>
 				control_lines := control_lines_instr(instr_reg, curr_clock_cycle, status_bit_reg);
-				
-				IF  (control_lines(0) = 1) THEN
-					curr_state := RUN_INSTR;
+			
+				IF  (control_lines(0) = '1') THEN
+					curr_state := PREP;
 				ELSE
 					curr_clock_cycle := curr_clock_cycle + 1;
 				END IF;
 				
 		END CASE;
-		
-		
-		
+		demux_mem 			<= control_lines(27);
+		demux_A 			<= control_lines(26);
+		demux_B 			<= control_lines(25 downto 24);
+		mux_mem 			<= control_lines(23 downto 22);
+		mux_reg 			<= control_lines(21 downto 20);
+		address_add 		<= control_lines(19 downto 18);
+		enable_instr 		<= control_lines(17);
+		enable_status_bit 	<= control_lines(16);
+		alu_instr 			<= control_lines(15 downto 13);
+		rw_mem_off 			<= control_lines(12 downto 10);
+		rw_reg_off 			<= control_lines(9 downto 8);
+		address_A_reg 		<= control_lines(7 downto 4);
+		address_B_reg 		<= control_lines (3 downto 0);
     END IF;
 	
   END PROCESS;
