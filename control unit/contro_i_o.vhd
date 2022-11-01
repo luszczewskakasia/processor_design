@@ -4,11 +4,11 @@ USE IEEE.std_logic_1164.ALL;
 USE IEEE.numeric_std.ALL;
 ENTITY control_unit IS
   PORT (
-    instr_reg   		: IN std_logic_vector(7 DOWNTO 0);
-    debug    			: IN std_logic_vector(2 DOWNTO 0); 
-    status_bit_reg		: IN std_logic;
-    clk     			: IN std_logic;
-    reset				: IN std_logic;
+    instr_reg   		: IN std_logic_vector(7 DOWNTO 0); --input instruction
+    debug    			: IN std_logic_vector(2 DOWNTO 0); --buttons to debug the processor
+    status_bit_reg		: IN std_logic; -- Input status bit
+    clk     			: IN std_logic; --50 Mhz clock
+    reset				: IN std_logic; --asynchronous reset
 
     demux_mem 			: OUT std_logic;
     demux_A				: OUT std_logic;
@@ -145,15 +145,34 @@ begin
 	
   BEGIN
     IF reset='0' THEN
-			
+		--when reset is pressed the curr_clock_cycle, curr_state and ouputs will all reset to the beginning state.
+		
+		curr_clock_cycle := 1;
+		curr_state := PREP;	
+		control_lines := (others =>	'0');
+		demux_mem 			<= control_lines(27);
+		demux_A 			<= control_lines(26);
+		demux_B 			<= control_lines(25 downto 24);
+		mux_mem 			<= control_lines(23 downto 22);
+		mux_reg 			<= control_lines(21 downto 20);
+		address_add 		<= control_lines(19 downto 18);
+		enable_instr 		<= control_lines(17);
+		enable_status_bit 	<= control_lines(16);
+		alu_instr 			<= control_lines(15 downto 13);
+		rw_mem_off 			<= control_lines(12 downto 11);
+		rw_reg_off 			<= control_lines (10 downto 9);
+		address_A_reg 		<= control_lines(8 downto 5);
+		address_B_reg 		<= control_lines (4 downto 1);
 		
     ELSIF rising_edge(clk) THEN
+		
 		case curr_state is
 			WHEN PREP =>
 				control_lines := control_lines_prep(curr_clock_cycle);
-				
+
 				IF  (control_lines(0) = '1') THEN
 					curr_state := RUN_INSTR;
+					curr_clock_cycle := 1;
 				ELSE
 					curr_clock_cycle := curr_clock_cycle + 1;
 				END IF;
@@ -163,10 +182,14 @@ begin
 			
 				IF  (control_lines(0) = '1') THEN
 					curr_state := PREP;
+					curr_clock_cycle := 1;
 				ELSE
 					curr_clock_cycle := curr_clock_cycle + 1;
 				END IF;
-				
+			WHEN OTHERS =>
+				curr_clock_cycle := 1;
+				curr_state := PREP;
+				control_lines := (others =>	'0');
 		END CASE;
 		
 		--output all the values (convert 28 bit vector to smaller ones)
@@ -179,10 +202,11 @@ begin
 		enable_instr 		<= control_lines(17);
 		enable_status_bit 	<= control_lines(16);
 		alu_instr 			<= control_lines(15 downto 13);
-		rw_mem_off 			<= control_lines(12 downto 10);
-		rw_reg_off 			<= control_lines(9 downto 8);
-		address_A_reg 		<= control_lines(7 downto 4);
-		address_B_reg 		<= control_lines (3 downto 0);
+		rw_mem_off 			<= control_lines(12 downto 11);
+		rw_reg_off 			<= control_lines (10 downto 9);
+		address_A_reg 		<= control_lines(8 downto 5);
+		address_B_reg 		<= control_lines (4 downto 1);
+		
     END IF;
 	
   END PROCESS;
