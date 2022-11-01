@@ -35,6 +35,8 @@ architecture bhv of control_unit is
 begin
   PROCESS(clk,reset)
 
+	--function that takes the current clock cycle, the status bit and the intruction as input and outputs a 28 wide binary number that gives information for all the internal components of the datapath.
+	--The function only works in the instruction state. The last bit tells us whether it is the last clock cycle of that specific instruction and therefore whether we should continue to the next state (prepare) ('1' last clock cycle, '0' not last clock cycle)
 	function control_lines_instr (temp_instr_reg:  std_logic_vector (7 DOWNTO 0); temp_clock_cycle : integer; temp_status_bit : std_logic) return std_logic_vector is
 	BEGIN
       		CASE temp_clock_cycle IS
@@ -122,6 +124,7 @@ begin
       END CASE;
     END control_lines_instr;
 	
+	--function that takes the current clock cycle and returns a 28 bit wide binary number that gives information for all the intnernal components. This function only works for the prepare state and the last bit gives information about going to the next state.
 	function control_lines_prep (temp_clock_cycle : integer) return std_logic_vector is
 	begin
 	case temp_clock_cycle is
@@ -133,16 +136,44 @@ begin
 		WHEN OTHERS => RETURN "----------------------------";
 	end case;
 	end control_lines_prep;
+	
+		
+	TYPE STATES IS (PREP, RUN_INSTR);
+    VARIABLE curr_state: states;
+	VARIABLE curr_clock_cycle: integer range 1 to 5 := 1;
+	VARIABLE control_lines: std_logic_vector (27 downto 0) := "----------------------------";
+	
   BEGIN
-    -- NO VHDL CODE HERE
     IF reset='0' THEN
-
- 
+			
+		
     ELSIF rising_edge(clk) THEN
-
-
+		case curr_state is
+			WHEN PREP =>
+				control_lines := control_lines_prep(curr_clock_cycle);
+				
+				IF  (control_lines(0) = 1) THEN
+					curr_state := RUN_INSTR;
+				ELSE
+					curr_clock_cycle := curr_clock_cycle + 1;
+				END IF;
+				
+			WHEN RUN_INSTR =>
+				control_lines := control_lines_instr(instr_reg, curr_clock_cycle, status_bit_reg);
+				
+				IF  (control_lines(0) = 1) THEN
+					curr_state := RUN_INSTR;
+				ELSE
+					curr_clock_cycle := curr_clock_cycle + 1;
+				END IF;
+				
+		END CASE;
+		
+		
+		
     END IF;
-    -- NO VHDL CODE HERE
+	
   END PROCESS;
-
+  
+  
 end;
