@@ -12,9 +12,9 @@ END ENTITY button;
 architecture bhv of button is 
 begin 
 	process (clk, reset)
-		variable previous_value : std_logic;
-		VARIABLE status_led : std_logic;
-		variable switch : std_logic;
+		variable previous_value : std_logic := '1';
+		VARIABLE status_led : std_logic := '0';
+		variable switch : std_logic := '0';
 		begin
 		if reset = '0' then
 			led <= '0';
@@ -31,7 +31,8 @@ begin
 				status_led := '1';
 			end if;
 			led <= status_led;
-			previous_value := '0';
+			previous_value := button;
+			switch := '0';
 		end if;
 	
 	end process;
