@@ -90,9 +90,9 @@ begin
 				when "0100" => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "00" & "0000" & "0000" & '0';
 				when "0101" => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "00" & "0000" & "0000" & '0';
 				when "0110" => return '0' & '0' & "01" & "00" & "01" & "00" & '0' & '0' & "000" & "00" & "11" & "1000" & "0000" & '1';
-				when "1000" => return '1' & '0' & "10" & "00" & "00" & "00" & '0' & '0' & "000" & "10" & "00" & "0000" & "0000" & '0';
+				when "1000" => return '1' & '0' & "01" & "00" & "00" & "00" & '0' & '0' & "000" & "10" & "00" & "0000" & "0000" & '0';
 				when "1001" => return '0' & '1' & "10" & "00" & "00" & "00" & '0' & '0' & "000" & "11" & "10" & "000"&  temp_instr_reg(3) & '0' & temp_instr_reg(2 downto 0) & '0';
-				when "1010" => return '0' & '0' & "01" & "00" & "01" & "00" & '0' & '0' & "000" & "00" & "11" & '0' & temp_instr_reg(3 downto 1) & "0000" & '1';
+				when "1010" => return '0' & '0' & "01" & "00" & "01" & "00" & '0' & '0' & "000" & "00" & "11" & '0' & temp_instr_reg(3 downto 1) & "0000" & '0';
 				WHEN OTHERS => RETURN "----------------------------";  
 			end case;
         	WHEN 3 => 
@@ -160,7 +160,7 @@ begin
 	TYPE STATES IS (PREP, RUN_INSTR);
     VARIABLE curr_state: states;
 	VARIABLE curr_clock_cycle: integer range 1 to 5 := 1;
-	VARIABLE control_lines: std_logic_vector (27 downto 0) := (others =>	'0');
+	VARIABLE control_lines: std_logic_vector (27 downto 0) := "----------------------------";
 	
 	variable previous_debug1 : std_logic := '1'; --active LOW
 	variable gotonextcycle : std_logic := '0'; --active HIGH
@@ -223,11 +223,11 @@ begin
 			END CASE;
 			
 			--output all the values (convert 28 bit vector to smaller ones)
-		else
+			update_outputs(control_lines);
+		elsif
 			enable_reg <= '1'; --disable registers so no normal operation (A, B, c and LOAD)
 		end if;
 		
-		update_outputs(control_lines);
 		previous_debug1 := debug(1); --update previousdebug value
 		gotonextcycle := '0'; --make the variable 0 again.
 
