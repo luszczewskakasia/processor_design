@@ -1,0 +1,2 @@
+set_location_assignment PIN_W15 -to button -button
+set_location_assignment PIN_V16 -to led -led
