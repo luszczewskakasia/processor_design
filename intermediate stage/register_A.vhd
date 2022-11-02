@@ -5,6 +5,7 @@ Entity register_A Is
 Port(Data_In : IN std_logic_vector(18 DOWNTO 0);
      clk : IN std_logic;
      reset : IN std_logic;
+     ctrl : IN std_logic;
      Data_Out : OUT std_logic_vector(18 DOWNTO 0));
 End register_A;
 
