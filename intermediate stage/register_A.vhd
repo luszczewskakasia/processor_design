@@ -11,12 +11,12 @@ End register_A;
 Architecture bhv of register_A Is
 begin
 process(clk,ctrl)
-begin 
-     if rising_edge(clk) then
+begin
+	if (reset= '0') THEN 
+		Data_Out<= (OTHERS => '0');
+    else rising_edge(clk) then
        if(ctrl ='1') then 
           Data_Out<= Data_In;
-       elsif(reset ='1') then 
-          Data_Out<="00000000";
        end if;
      end if;
 end process;
