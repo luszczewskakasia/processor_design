@@ -14,11 +14,11 @@ Architecture bhv of instruction_register Is
 begin
 process(clk,ctrl)
 begin 
-     if rising_edge(clk) then
-       if(ctrl ='1') then 
+     if (reset='0') then
+	Data_Out<=(OTHERS=>'0');
+     elsif rising_edge(clk) then
+       if(ctrl ='0') then 
           Data_Out<= Data_In;
-       elsif(reset ='1') then 
-          Data_Out<="00000000";
        end if;
      end if;
 end process;
