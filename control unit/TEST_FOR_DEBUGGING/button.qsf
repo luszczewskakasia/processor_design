@@ -1,2 +1,6 @@
-set_location_assignment PIN_W15 -to button -button
-set_location_assignment PIN_V16 -to led -led
+set_location_assignment PIN_AF14 -to clk -comment CLOCK_50
+
+
+set_location_assignment PIN_W15 -to button -comment key[2]
+set_location_assignment PIN_V16 -to led -comment output led
+set_location_assignment PIN_AA14 -to reset -comment KEY[0]
