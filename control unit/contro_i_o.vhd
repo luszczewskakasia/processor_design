@@ -224,10 +224,10 @@ begin
 			
 			--output all the values (convert 28 bit vector to smaller ones)
 			update_outputs(control_lines);
+		elsif
+			enable_reg <= '1'; --disable registers so no normal operation (A, B, c and LOAD)
 		end if;
 		
-		--
-		enable_reg <= '1'; --disable registers so no normal operation (A, B, c and LOAD)
 		previous_debug1 := debug(1); --update previousdebug value
 		gotonextcycle := '0'; --make the variable 0 again.
 
