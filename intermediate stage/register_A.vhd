@@ -14,8 +14,8 @@ process(clk,ctrl)
 begin
 	if (reset= '0') THEN 
 		Data_Out<= (OTHERS => '0');
-    else rising_edge(clk) then
-       if(ctrl ='1') then 
+    elsif rising_edge(clk) then
+       if(ctrl = '0') then 
           Data_Out<= Data_In;
        end if;
      end if;
