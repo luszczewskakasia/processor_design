@@ -9,6 +9,15 @@ ENTITY control_unit IS
     status_bit_reg		: IN std_logic; -- Input status bit
     clk     			: IN std_logic; --50 Mhz clock
     reset				: IN std_logic; --asynchronous reset
+	
+	register_A 			: IN std_logic_vector(18 downto 0);
+	register_B			: IN std_logic_vector(18 downto 0);
+	register_C			: IN std_logic_vector(18 downto 0);
+	register_LOAD		: IN std_logic_vector(18 downto 0);
+	register_instr		: IN std_logic_vector(18 downto 0);
+
+	dig2 				: OUT std_logic_vector(6 downto 0);
+	dig3				: OUT std_logic_vector(6 downto 0);
 
     demux_mem 			: OUT std_logic; 
     demux_A				: OUT std_logic;
@@ -157,13 +166,61 @@ begin
 		address_B_reg 		<= control_lines (4 downto 1);
 	end update_outputs;
 
-	TYPE STATES IS (PREP, RUN_INSTR);
-    VARIABLE curr_state: states;
+	--procedure that outputs the next register in the line on dig2 and dig3
+	procedure outputdisplay(current_disp_out: integer range 1 to 5) is 
+	    FUNCTION hex_2display (n:std_logic_vector(3 DOWNTO 0)) RETURN std_logic_vector IS
+		VARIABLE res : std_logic_vector(6 DOWNTO 0);
+        BEGIN
+            CASE n IS -- gfedcba; low active
+                WHEN "0000" => RETURN NOT "0111111";
+                WHEN "0001" => RETURN NOT "0000110";
+                WHEN "0010" => RETURN NOT "1011011";
+                WHEN "0011" => RETURN NOT "1001111";
+                WHEN "0100" => RETURN NOT "1100110";
+                WHEN "0101" => RETURN NOT "1101101";
+                WHEN "0110" => RETURN NOT "1111101";
+                WHEN "0111" => RETURN NOT "0000111";
+                WHEN "1000" => RETURN NOT "1111111";
+                WHEN "1001" => RETURN NOT "1101111";
+                WHEN "1010" => RETURN NOT "1110111";
+                WHEN "1011" => RETURN NOT "1111100";
+                WHEN "1100" => RETURN NOT "0111001";
+                WHEN "1101" => RETURN NOT "1011110";
+                WHEN "1110" => RETURN NOT "1111001";
+                WHEN OTHERS => RETURN NOT "1110001";
+            END CASE;
+        END hex_2display;
+	begin
+		CASE current_disp_out is
+			WHEN 1=>
+				dig2 <= hex_2display(register_A(3 downto 0));
+				dig3 <=hex_2display(register_A(7 downto 4));
+			WHEN 2=>
+				dig2 <= hex_2display(register_B(3 downto 0));
+				dig3 <=hex_2display(register_B(7 downto 4));
+			WHEN 3=>
+				dig2 <= hex_2display(register_C(3 downto 0));
+				dig3 <=hex_2display(register_C(7 downto 4));
+			WHEN 4=>
+				dig2 <= hex_2display(register_LOAD(3 downto 0));
+				dig3 <=hex_2display(register_LOAD(7 downto 4));
+			WHEN 5=>
+				dig2 <= hex_2display(register_instr(3 downto 0));
+				dig3 <=hex_2display(register_instr(7 downto 4));
+		END case;
+	end outputdisplay;
+	
+	TYPE STATES IS (PREP, RUN_INSTR, FIRST_CLOCK_CYCLE);
+    VARIABLE curr_state: states := FIRST_CLOCK_CYCLE;
 	VARIABLE curr_clock_cycle: integer range 1 to 5 := 1;
 	VARIABLE control_lines: std_logic_vector (27 downto 0) := (others =>	'0');
 	
 	variable previous_debug1 : std_logic := '1'; --active LOW
 	variable gotonextcycle : std_logic := '0'; --active HIGH
+	
+	variable previous_debug0 : std_logic := '1';
+	variable switch	: std_logic := '0';
+	variable current_disp_out : integer range 1 to 5 := 1;
 	
 	CONSTANT debugging_onoff : std_logic := '1'; -- 1 means debugging is on and 0 means debugging is off
 	
@@ -172,11 +229,26 @@ begin
 		--when reset is pressed the curr_clock_cycle, curr_state and ouputs will all reset to the beginning state.
 		
 		curr_clock_cycle := 1;
-		curr_state := PREP;	
+		curr_state := FIRST_CLOCK_CYCLE;	
 		control_lines := (others =>	'0');
 		update_outputs(control_lines);
+		previous_debug1 := '1';
+		gotonextcycle := '0';
 		
     ELSIF rising_edge(clk) THEN
+		
+		--find rising edge of debug button debug(0)
+		if (debug(0) = '0' AND previous_debug0 = '1') THEN 
+			switch := '1';
+		end if;
+		
+		if (switch) = '1' THEN 
+			if (current_disp_out = 5) THEN 
+				current_disp_out := 1;
+			ELSE 
+				current_disp_out := current_disp_out + 1;
+			END if;
+		END IF;
 		
 		--find rising edge of debug button debug(1)
 		if (debug(1) = '0' AND previous_debug1 = '1') THEN 
@@ -187,6 +259,9 @@ begin
 		if ((NOT debug(2)) or (not debugging_onoff) or gotonextcycle) = '1' then			
 			enable_reg <= '0'; --enable registers for normal operations (register A, B, C and LOAD)
 			case curr_state is
+				WHEN FIRST_CLOCK_CYCLE =>
+					control_lines := '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "01" & "0000" & "0000" & '0';
+					curr_state := PREP;
 				WHEN PREP =>
 					--find control lines output using the current clock cycle
 					control_lines := control_lines_prep(curr_clock_cycle);
@@ -222,15 +297,16 @@ begin
 					control_lines := (others =>	'0');
 			END CASE;
 			
-			--output all the values (convert 28 bit vector to smaller ones)
 		else
 			enable_reg <= '1'; --disable registers so no normal operation (A, B, c and LOAD)
 		end if;
 		
-		update_outputs(control_lines);
+		outputdisplay(current_disp_out); --change dig2 and dig3 to the value of the selected register
+		update_outputs(control_lines);	--output all the values (convert 28 bit vector to smaller ones)
 		previous_debug1 := debug(1); --update previousdebug value
+		previous_debug0 := debug(0); --update previousdebug value
 		gotonextcycle := '0'; --make the variable 0 again.
-
+		switch := '0'; --make the variable 0 again.
     END IF;
 	
   END PROCESS;
