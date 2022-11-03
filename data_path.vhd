@@ -61,7 +61,9 @@ architecture of data_path is
 	signal status_bit_ALU	: std_logic_vector(1 downto 0);		-- staus_bit_ALu -> ALU (status_bit)
 	signal reg_C_out		: std_logic_vector(18 DOWNTO 0);	-- reg_C_out -> ALU (mux_register)
 	signal load_register 	: std_logic_vector(18 DOWNTO 0); 	-- Data_Out -> load_register(load)
-	signal signextend_reg	: std_logic_vector(18 DOWNTO 0); 	-- load_register -> signextend_reg (load)
+	signal signextend_reg	: std_logic_vector(18 DOWNTO 0); 	-- signextend_reg -> Data_In (sign_extend)
+	signal se_reg			: std_logic_vector(18 DOWNTO 0);	-- load_register -> se_reg (demux_mem)
+	signal instr_register	: std_logic_vector(7 DOWNTO 0);		-- instr_register -> Data_In (instruction_reg)
 	
 	
 begin
@@ -117,7 +119,8 @@ begin
 		C => reg_C_in,
 		status_bit => status_bit_ALU
 		);
-	reg_B : entity work.register_C port map (
+		
+	reg_C : entity work.register_C port map (
 		clk => clk,
 		reset => reset,
 		Data_In => reg_C_in,
@@ -132,6 +135,7 @@ begin
 		ctrl => mux_reg,
 		b => reg_din		
 		);
+		
 	sts_bit: entity work.status_bit port map (
 		clk => clk,
 		reset => reset,
@@ -139,12 +143,39 @@ begin
 		ctrl => enable_status_bit,
 		control => status_bit	
 		);
+		
 	load: entity work.load_register port map (
 		Data_In => signextend_reg,
 		clk => clk,
 		reset => reset,
-		ctrl => 
-		
+		ctrl => enable_reg,
+		Data_Out => load_register		
 		);
+		
+	SE:entity work.sign_extend port map(
+		memory => se_reg,
+		load_register => signextend_reg	
+		);
+		
+	dux_mem:entity work.demux_memory port map(
+		memory => memory_data_in,
+		ctrl => demux_mem,
+		instruction_register => instr_register,
+		load_register => se_reg	
+		);
+		
+		
+		
+		
+		
+		
+
+	reg_A <= reg_A_out
+	reg_B <= reg_B_out
+	reg_C <= reg_C_out
+	reg_load <= load_register
+
+
+
 
 -- a,b,c, load should be output of datapath.
