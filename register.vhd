@@ -7,7 +7,7 @@ ENTITY reg IS
 		din     	: IN std_logic_vector(18 DOWNTO 0);
 		a_add		: IN std_logic_vector(3 DOWNTO 0);
 		b_add		: IN std_logic_vector(3 DOWNTO 0);
-		reg_status 	: IN std_logic_vector(1 downto 0);
+		rw_reg_off 	: IN std_logic_vector(1 downto 0);
 		clk     	: IN std_logic;
 		reset		: IN std_logic;
 		app_input	: IN std_logic_vector (9 downto 0);
@@ -41,17 +41,21 @@ FUNCTION hex2display (n:std_logic_vector(3 DOWNTO 0)) RETURN std_logic_vector IS
 	    WHEN "1100" => RETURN NOT "0111001";
 	    WHEN "1101" => RETURN NOT "1011110";
 	    WHEN "1110" => RETURN NOT "1111001";
-	    WHEN OTHERS => RETURN NOT "1110001";			
+		when "1111" => RETURN NOT "1110001";
+	    WHEN OTHERS => RETURN NOT "1000000"	-- this part changed, when other would give "-"
     END CASE;
   END hex2display;
 TYPE regs IS ARRAY (0 TO 2**4) OF std_logic_vector(18 DOWNTO 0);
   SIGNAL reg: regs;
   	
 	--signal reg_status : std_logic_vector (1 downto 0);
-	signal pre_dig0, pre_dig1, pre_dig2 : std_logic_vector (3 downto 0);
+	
 	
 begin
 	process(clk,reset)
+	
+	variable pre_dig0, pre_dig1 : std_logic_vector (3 downto 0);
+	
 	begin
 		if reset = '0' then
 			for i in 1 to 7 loop
@@ -63,15 +67,15 @@ begin
 			
 		elsif rising_edge(clk) then
 				
-			pre_dig0 <= reg(0)(3 downto 0);pre_dig1 <= reg(0)(7 downto 4)
+			pre_dig0 := reg(0)(3 downto 0);pre_dig1 := reg(0)(7 downto 4);
 			dig0 <= hex2display(pre_dig0);dig1 <= hex2display(pre_dig1);
 																-- showing r6 to dig0, dig1
 			
-			if reg_status = "10" then 							-- read
+			if rw_reg_off = "10" then 							-- read
 				a_out <= reg(to_integer(unsigned(a_add)));
 				b_out <= reg(to_integer(unsigned(b_add)));		
 				
-			elsif reg_status = "11" then						-- write, always to A address.
+			elsif rw_reg_off = "11" then						-- write, always to A address.
 				if a_add /= "0111" then							-- when write address is not r7.
 					reg(to_integer(unsigned(a_add))) <= din;
 					a_out <= (others => '-');
@@ -80,18 +84,15 @@ begin
 					reg(to_integer(unsigned(a_add))) <= std_logic_vector(to_unsigned(1,19));
 				end if;
 			
-			elsif reg_status = "11" then
+			elsif rw_reg_off = "01" then
 				reg(6) <= "000000000" & app_input;				-- updating app_input to r6
 			
-			elsif reg_status = "00" then 						-- disabled
+			elsif rw_reg_off = "00" then 						-- disabled
 			
 				a_out <= (others => '-');
 				b_out <= (others => '-');
 			
 			end if;
-		
-		
-		
 		
 		end if;
 	end process;
