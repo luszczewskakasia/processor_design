@@ -34,9 +34,13 @@ entity data_path is
 		dig0				: OUT std_logic_vector (6 downto 0);
 		dig1				: OUT std_logic_vector (6 downto 0);	
 		address_mem			: OUT std_logic_vector (reg_w-1  downto 0); -- address from adder to memory
-		status_bit			: OUT std_logic;
+		status_bit			: OUT std_logic;					-- status bit from datapath to control
 		memory_data_out		: OUT std_logic_vector (7 downto 0) -- data from mux_memory to memory
 		instruction_data_out: OUT std_logic_vector (7 downto 0) -- data from instruction to control
+		reg_A				: OUT std_logic_vector(18 DOWNTO 0);
+		reg_B				: OUT std_logic_vector(18 DOWNTO 0);
+		reg_C				: OUT std_logic_vector(18 DOWNTO 0);
+		reg_load			: OUT std_logic_vector(18 DOWNTO 0);
 		
 	);
 end data_path;
@@ -57,6 +61,7 @@ architecture of data_path is
 	signal status_bit_ALU	: std_logic_vector(1 downto 0);		-- staus_bit_ALu -> ALU (status_bit)
 	signal reg_C_out		: std_logic_vector(18 DOWNTO 0);	-- reg_C_out -> ALU (mux_register)
 	signal load_register 	: std_logic_vector(18 DOWNTO 0); 	-- Data_Out -> load_register(load)
+	signal signextend_reg	: std_logic_vector(18 DOWNTO 0); 	-- load_register -> signextend_reg (load)
 	
 	
 begin
@@ -127,6 +132,19 @@ begin
 		ctrl => mux_reg,
 		b => reg_din		
 		);
-	
+	sts_bit: entity work.status_bit port map (
+		clk => clk,
+		reset => reset,
+		ALU => status_bit_ALU,
+		ctrl => enable_status_bit,
+		control => status_bit	
+		);
+	load: entity work.load_register port map (
+		Data_In => signextend_reg,
+		clk => clk,
+		reset => reset,
+		ctrl => 
+		
+		);
 
 -- a,b,c, load should be output of datapath.
