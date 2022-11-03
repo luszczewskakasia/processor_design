@@ -134,7 +134,7 @@ begin
 			end case;
         	WHEN 4 => 
 			case temp_instr_reg (7 downto 4) is 
-				when "0000" => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '1' & "000" & "00" & "00" & "0000" & "0000" & '0'; --store aluoutput into into register c and store status bit
+				when "0000" => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "00" & "0000" & "0000" & '0'; --store aluoutput into into register c
 				when "0001" => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '1' & "000" & "00" & "00" & "0000" & "0000" & '0'; --store aluoutput into into register c and store status bit
 				when "0010" =>
 					case temp_instr_reg (3) is
