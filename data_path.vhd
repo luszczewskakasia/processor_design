@@ -178,6 +178,12 @@ begin
 		memory => memory_data_out	
 		);
 		
+	adder:entity work.adder port map(
+		Data_In => to_adder,
+		Data_Out => address_mem,
+		ctrl => address_add		
+		);
+		
 	reg_A <= reg_A_out
 	reg_B <= reg_B_out
 	reg_C <= reg_C_out
