@@ -53,84 +53,121 @@ begin
       		CASE temp_clock_cycle IS
         	WHEN 1 =>
 			case temp_instr_reg (7 downto 4) is 
-				when "0000" => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "10" & "000" & temp_instr_reg(3) & '0' & temp_instr_reg(2 downto 0) & '0';
-				when "0001" => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "10" & "000" & temp_instr_reg(3) & '0' & temp_instr_reg(2 downto 0) & '0';
+				when "0000" => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "10" & "000" & temp_instr_reg(3) & '0' & temp_instr_reg(2 downto 0) & '0'; --load a and b from register
+				when "0001" => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "10" & "000" & temp_instr_reg(3) & '0' & temp_instr_reg(2 downto 0) & '0'; --load a and b from register
 				when "0010" =>
 					case temp_instr_reg (3) is
-						when '0' => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "10" & '0' & temp_instr_reg(2 downto 0) & "0000" & '0';
-						when '1' => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "10" & '0' & temp_instr_reg(2 downto 0) & "0000" & '0';
+						when '0' => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "10" & '0' & temp_instr_reg(2 downto 0) & "0000" & '0'; --load data to output A
+						when '1' => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "10" & '0' & temp_instr_reg(2 downto 0) & "0000" & '0'; --load data to output A
 						WHEN OTHERS => RETURN "----------------------------";
 					end case;
 				when "0011" =>
 					case temp_instr_reg (3) is
-						when '0' => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "10" & '0' & temp_instr_reg(2 downto 0) & "0000" & '0';
-						when '1' => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "10" & '0' & temp_instr_reg(2 downto 0) & "0000" & '0';
+						when '0' => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "10" & '0' & temp_instr_reg(2 downto 0) & "0000" & '0'; --load data to output A
+						when '1' => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "10" & '0' & temp_instr_reg(2 downto 0) & "0000" & '0'; --load data to output A
 						WHEN OTHERS => RETURN "----------------------------";
 					end case;
-				when "0100" => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "10" & "1000" & '0' & temp_instr_reg(2 downto 0) & '0';
+				when "0100" => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "10" & "1000" & '0' & temp_instr_reg(2 downto 0) & '0'; --load PC at outpA and value at outpB of reg
 				when "0101" => 
 					case  temp_status_bit is
-						when '0' => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "00" & "0000" & "0000" & '1';
-						when '1' => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "10" & "1000" & '0' & temp_instr_reg(2 downto 0) & '0';
+						when '0' => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "00" & "0000" & "0000" & '1'; --not equal so end instruction
+						when '1' => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "10" & "1000" & '0' & temp_instr_reg(2 downto 0) & '0'; --load PC at outpA 
 						WHEN OTHERS => RETURN "----------------------------";
 					end case;
-				when "0110" => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "10" & "0000" & '0' & temp_instr_reg(2 downto 0) & '0';
-				when "1000" => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "10" & "0000" & "000" & temp_instr_reg(3) & '0';
-				when "1001" => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "10" & "000" & temp_instr_reg(3) & '0' & temp_instr_reg(2 downto 0) & '0';
-				when "1010" => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "10" & "0000" & "000" & temp_instr_reg(0) & '0';
+				when "0110" => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "10" & "0000" & '0' & temp_instr_reg(2 downto 0) & '0'; --load value to output B
+				when "1000" => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "10" & "0000" & "000" & temp_instr_reg(3) & '0'; --load value to output regB
+				when "1001" => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "10" & "000" & temp_instr_reg(3) & '0' & temp_instr_reg(2 downto 0) & '0'; --load regA (value) and regB (address)
+				when "1010" => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "10" & "0000" & "000" & temp_instr_reg(0) & '0'; --load value to output B of reg
 				WHEN OTHERS => RETURN "----------------------------";  
 			end case;
          	WHEN 2 => 
 			case temp_instr_reg (7 downto 4) is 
-				when "0000" => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '1' & "001" & "00" & "00" & "0000" & "0000" & '0';
-				when "0001" => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '1' & "000" & "00" & "00" & "0000" & "0000" & '0';
+				when "0000" => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "00" & "0000" & "0000" & '0'; --load register output into a and b
+				when "0001" => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "00" & "0000" & "0000" & '0'; --load register output into a and b
 				when "0010" =>
 					case temp_instr_reg (3) is
-						when '0' => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "010" & "00" & "00" & "0000" & "0000" & '0';
-						when '1' => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "011" & "00" & "00" & "0000" & "0000" & '0';
+						when '0' => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "00" & "0000" & "0000" & '0'; --load into regA 
+						when '1' => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "00" & "0000" & "0000" & '0'; --load into regA 
 						WHEN OTHERS => RETURN "----------------------------";
 					end case;
 				when "0011" =>
 					case temp_instr_reg (3) is
-						when '0' => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "100" & "00" & "00" & "0000" & "0000" & '0';
-						when '1' => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "101" & "00" & "00" & "0000" & "0000" & '0'; 
+						when '0' => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "00" & "0000" & "0000" & '0'; --load into regA 
+						when '1' => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "00" & "0000" & "0000" & '0'; --load into regA 
 						WHEN OTHERS => RETURN "----------------------------";
 					end case;
-				when "0100" => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "00" & "0000" & "0000" & '0';
-				when "0101" => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "00" & "0000" & "0000" & '0';
-				when "0110" => return '0' & '0' & "01" & "00" & "01" & "00" & '0' & '0' & "000" & "00" & "11" & "1000" & "0000" & '1';
-				when "1000" => return '1' & '0' & "10" & "00" & "00" & "00" & '0' & '0' & "000" & "10" & "00" & "0000" & "0000" & '0';
-				when "1001" => return '0' & '1' & "10" & "00" & "00" & "00" & '0' & '0' & "000" & "11" & "10" & "000"&  temp_instr_reg(3) & '0' & temp_instr_reg(2 downto 0) & '0';
-				when "1010" => return '0' & '0' & "01" & "00" & "01" & "00" & '0' & '0' & "000" & "00" & "11" & '0' & temp_instr_reg(3 downto 1) & "0000" & '1';
+				when "0100" => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "00" & "0000" & "0000" & '0'; --load into regA and regB and instruct ALU
+				when "0101" => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "00" & "0000" & "0000" & '0'; --load into regA and regB and instruct ALU
+				when "0110" => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "00" & "0000" & "0000" & '0'; --load output B into regB
+				when "1000" => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "00" & "0000" & "0000" & '0'; --load result reg into B
+				when "1001" => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "10" & "000" & temp_instr_reg(3) & '0' & temp_instr_reg(2 downto 0) & '0'; --load regA (value) and regB (address) and save output a and b reg in register a and B
+				when "1010" => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "00" & "0000" & "0000" & '0'; --load outputB of register into register B
 				WHEN OTHERS => RETURN "----------------------------";  
 			end case;
         	WHEN 3 => 
 			case temp_instr_reg (7 downto 4) is 
-				when "0000" => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "11" & "000" & temp_instr_reg(3) & "0000" & '1';
-				when "0001" => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "11" & "000" & temp_instr_reg(3) & "0000" & '1';
+				when "0000" => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "001" & "00" & "00" & "0000" & "0000" & '0'; --instruct ALU
+				when "0001" => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "00" & "0000" & "0000" & '0'; --instruct ALU
 				when "0010" =>
 					case temp_instr_reg (3) is
-						when '0' => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "11" & '0' & temp_instr_reg(2 downto 0) & "0000" & '1';
-						when '1' => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "11" & '0' & temp_instr_reg(2 downto 0) & "0000" & '1';
+						when '0' => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "010" & "00" & "00" & "0000" & "0000" & '0'; --ALU instruct
+						when '1' => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "011" & "00" & "00" & "0000" & "0000" & '0'; --ALU instruct
 						WHEN OTHERS => RETURN "----------------------------";
 					end case;
-				when "0011" =>
+				when "0010" =>
 					case temp_instr_reg (3) is
-						when '0' => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "11" & '0' & temp_instr_reg(2 downto 0) & "0000" & '1';
-						when '1' => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "11" & '0' & temp_instr_reg(2 downto 0) & "0000" & '1';
-						WHEN OTHERS => RETURN "----------------------------"; 
+						when '0' => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "100" & "00" & "00" & "0000" & "0000" & '0'; --ALU instruct
+						when '1' => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "101" & "00" & "00" & "0000" & "0000" & '0'; --ALU instruct
+						WHEN OTHERS => RETURN "----------------------------";
 					end case;
-				when "0100" => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "11" & "1000" & "0000" & '1';
-				when "0101" => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "11" & "1000" & "0000" & '1';
-				when "1000" => return '0' & '0' & "00" & "00" & "10" & "00" & '0' & '0' & "000" & "00" & "11" & '0' & temp_instr_reg(2 downto 0) & "0000"  & '1';
-				when "1001" => return '0' & '1' & "10" & "01" & "00" & "01" & '0' & '0' & "000" & "11" & "10" & "000" & temp_instr_reg(3) & '0' & temp_instr_reg(2 downto 0) & '0';
+				when "0100" => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "00" & "0000" & "0000" & '0'; --load result ALU into C
+				when "0101" => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "00" & "0000" & "0000" & '0'; --load result ALU into C
+				when "0110" => return '0' & '0' & "01" & "00" & "01" & "00" & '0' & '0' & "000" & "00" & "11" & "1000" & "0000" & '1'; --load B into register
+				when "1000" => return '0' & '0' & "10" & "00" & "00" & "00" & '0' & '0' & "000" & "10" & "00" & "0000" & "0000"  & '0'; --ask mem for data
+				when "1001" => return '0' & '1' & "10" & "00" & "00" & "00" & '0' & '0' & "000" & "11" & "10" & "000" & temp_instr_reg(3) & '0' & temp_instr_reg(2 downto 0) & '0'; --load regA (value) and regB (address) and save output a and b reg in register a and B and store value in mem
+				when "1010" => return '0' & '0' & "01" & "00" & "01" & "00" & '0' & '0' & "000" & "00" & "11" & '0' & temp_instr_reg (3 downto 1) & "0000" & '1'; --save register B into register file
 				WHEN OTHERS => RETURN "----------------------------";  
 			end case;
         	WHEN 4 => 
 			case temp_instr_reg (7 downto 4) is 
-				when "1001" => return '0' & '1' & "10" & "10" & "00" & "10" & '0' & '0' & "000" & "11" & "00" & "0000" & "0000"& '1';
+				when "0000" => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '1' & "000" & "00" & "00" & "0000" & "0000" & '0'; --store aluoutput into into register c and store status bit
+				when "0001" => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '1' & "000" & "00" & "00" & "0000" & "0000" & '0'; --store aluoutput into into register c and store status bit
+				when "0010" =>
+					case temp_instr_reg (3) is
+						when '0' => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "00" & "0000" & "0000" & '0'; --store value into regc
+						when '1' => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "00" & "0000" & "0000" & '0'; --store value into regC
+						WHEN OTHERS => RETURN "----------------------------";
+					end case;
+				when "0011" =>
+					case temp_instr_reg (3) is
+						when '0' => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "00" & "0000" & "0000" & '0'; --store value into regc
+						when '1' => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "00" & "0000" & "0000" & '0'; --store value into regC
+						WHEN OTHERS => RETURN "----------------------------";
+					end case;
+				when "0100" => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "11" & "1000" & "0000" & '1'; --store result in register file
+				when "0101" => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "11" & "1000" & "0000" & '1'; --store result in register file
+				when "1000" => return '1' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "00" & "0000" & "0000"  & '0'; --load result mem in load reg
+				when "1001" => return '0' & '1' & "10" & "01" & "00" & "01" & '0' & '0' & "000" & "11" & "00" & "0000" & "0000" & '0'; --save output a and b reg in register a and B and store value in mem with address+1 and next 8 bits
 				WHEN OTHERS => RETURN "----------------------------";  
 			end case;
+			
+			WHEN 5 =>
+				when "0000" => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "11" & "000" & temp_instr_reg(3) & "0000" & '1'; --store regC into register
+				when "0001" => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "11" & "000" & temp_instr_reg(3) & "0000" & '1'; --store regC into register
+				when "0010" =>
+					case temp_instr_reg (3) is
+						when '0' => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "11" & '0' & temp_instr_reg(2 downto 0) & "0000" & '1'; --store value C into reg
+						when '1' => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "11" & '0' & temp_instr_reg(2 downto 0) & "0000" & '1'; --store value C into reg
+						WHEN OTHERS => RETURN "----------------------------";
+					end case;
+				when "0010" =>
+					case temp_instr_reg (3) is
+						when '0' => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "11" & '0' & temp_instr_reg(2 downto 0) & "0000" & '1'; --store value C into reg
+						when '1' => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "11" & '0' & temp_instr_reg(2 downto 0) & "0000" & '1'; --store value C into reg
+						WHEN OTHERS => RETURN "----------------------------";
+					end case;
+				when "1000" => return '0' & '0' & "00" & "00" & "10" & "00" & '0' & '0' & "000" & "00" & "11" & '0' & temp_instr_reg(2 downto 0) & "0000"  & '1'; --store load into reg
+				when "1001" => return '0' & '1' & "10" & "10" & "00" & "10" & '0' & '0' & "000" & "11" & "00" & "0000" & "0000" & '1'; --store value in mem with address+2 and last 3 bits
         	WHEN OTHERS => RETURN "----------------------------";      
       END CASE;
     END control_lines_instr;
@@ -139,11 +176,15 @@ begin
 	function control_lines_prep (temp_clock_cycle : integer) return std_logic_vector is
 	begin
 	case temp_clock_cycle is
-		when 1 => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "10" & "0000" & "1000" & '0';
-		when 2 => return '0' & '0' & "10" & "00" & "00" & "00" & '1' & '0' & "000" & "10" & "00" & "0000" & "0000" & '0';
-		when 3 => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "10" & "1000" & "0111" & '0';
-		when 4 => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "00" & "0000" & "0000" & '0';
-		when 5 => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "11" & "1000" & "0000" & '1';
+		when 1 => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "10" & "0000" & "1000" & '0'; --load register PC
+		when 2 => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "00" & "0000" & "0000" & '0'; --store in reg B
+		when 3 => return '0' & '0' & "10" & "00" & "00" & "00" & '0' & '0' & "000" & "10" & "00" & "0000" & "0000" & '0'; --ask data from mem
+		when 4 => return '0' & '0' & "00" & "00" & "00" & "00" & '1' & '0' & "000" & "00" & "00" & "0000" & "0000" & '0'; --store result in instr reg
+		when 5 => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "10" & "1000" & "0111" & '0'; --ask data from register 
+		when 6 => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "00" & "0000" & "0000" & '0'; --load into a and b 
+		when 7 => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "00" & "0000" & "0000" & '0'; --instruct ALU to add
+		when 8 => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '1' & "000" & "00" & "00" & "0000" & "0000" & '0'; --load result in status bit and reg c
+		when 9 => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "11" & "1000" & "0000" & '1'; --save c (result) in register
 		WHEN OTHERS => RETURN "----------------------------";
 	end case;
 	end control_lines_prep;
@@ -168,28 +209,29 @@ begin
 
 	--procedure that outputs the next register in the line on dig2 and dig3
 	procedure outputdisplay(current_disp_out: integer range 1 to 5) is 
-	    FUNCTION hex_2display (n:std_logic_vector(3 DOWNTO 0)) RETURN std_logic_vector IS
+	FUNCTION hex2display (n:std_logic_vector(3 DOWNTO 0)) RETURN std_logic_vector IS
 		VARIABLE res : std_logic_vector(6 DOWNTO 0);
-        BEGIN
-            CASE n IS -- gfedcba; low active
-                WHEN "0000" => RETURN NOT "0111111";
-                WHEN "0001" => RETURN NOT "0000110";
-                WHEN "0010" => RETURN NOT "1011011";
-                WHEN "0011" => RETURN NOT "1001111";
-                WHEN "0100" => RETURN NOT "1100110";
-                WHEN "0101" => RETURN NOT "1101101";
-                WHEN "0110" => RETURN NOT "1111101";
-                WHEN "0111" => RETURN NOT "0000111";
-                WHEN "1000" => RETURN NOT "1111111";
-                WHEN "1001" => RETURN NOT "1101111";
-                WHEN "1010" => RETURN NOT "1110111";
-                WHEN "1011" => RETURN NOT "1111100";
-                WHEN "1100" => RETURN NOT "0111001";
-                WHEN "1101" => RETURN NOT "1011110";
-                WHEN "1110" => RETURN NOT "1111001";
-                WHEN OTHERS => RETURN NOT "1110001";
-            END CASE;
-        END hex_2display;
+	BEGIN
+		CASE n IS          --        gfedcba; low active
+			WHEN "0000" => RETURN NOT "0111111";
+			WHEN "0001" => RETURN NOT "0000110";
+			WHEN "0010" => RETURN NOT "1011011";
+			WHEN "0011" => RETURN NOT "1001111";
+			WHEN "0100" => RETURN NOT "1100110";
+			WHEN "0101" => RETURN NOT "1101101";
+			WHEN "0110" => RETURN NOT "1111101";
+			WHEN "0111" => RETURN NOT "0000111";
+			WHEN "1000" => RETURN NOT "1111111";
+			WHEN "1001" => RETURN NOT "1101111";
+			WHEN "1010" => RETURN NOT "1110111";
+			WHEN "1011" => RETURN NOT "1111100";
+			WHEN "1100" => RETURN NOT "0111001";
+			WHEN "1101" => RETURN NOT "1011110";
+			WHEN "1110" => RETURN NOT "1111001";
+			when "1111" => RETURN NOT "1110001";
+			WHEN OTHERS => RETURN NOT "1000000"	-- this part chenaged, when other would give "-"
+		END CASE;
+	END hex2display;
 	begin
 		CASE current_disp_out is
 			WHEN 1=>
@@ -212,7 +254,7 @@ begin
 	
 	TYPE STATES IS (PREP, RUN_INSTR, FIRST_CLOCK_CYCLE);
     VARIABLE curr_state: states := FIRST_CLOCK_CYCLE;
-	VARIABLE curr_clock_cycle: integer range 1 to 5 := 1;
+	VARIABLE curr_clock_cycle: integer range 1 to 9 := 1;
 	VARIABLE control_lines: std_logic_vector (27 downto 0) := (others =>	'0');
 	
 	variable previous_debug1 : std_logic := '1'; --active LOW
