@@ -14,7 +14,6 @@ ENTITY control_unit IS
 	register_B			: IN std_logic_vector(18 downto 0);
 	register_C			: IN std_logic_vector(18 downto 0);
 	register_LOAD		: IN std_logic_vector(18 downto 0);
-	register_instr		: IN std_logic_vector(18 downto 0);
 
 	dig2 				: OUT std_logic_vector(6 downto 0);
 	dig3				: OUT std_logic_vector(6 downto 0);
@@ -114,7 +113,7 @@ begin
 						when '1' => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "011" & "00" & "00" & "0000" & "0000" & '0'; --ALU instruct
 						WHEN OTHERS => RETURN "----------------------------";
 					end case;
-				when "0010" =>
+				when "0011" =>
 					case temp_instr_reg (3) is
 						when '0' => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "100" & "00" & "00" & "0000" & "0000" & '0'; --ALU instruct
 						when '1' => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "101" & "00" & "00" & "0000" & "0000" & '0'; --ALU instruct
@@ -150,8 +149,8 @@ begin
 				when "1001" => return '0' & '1' & "10" & "01" & "00" & "01" & '0' & '0' & "000" & "11" & "00" & "0000" & "0000" & '0'; --save output a and b reg in register a and B and store value in mem with address+1 and next 8 bits
 				WHEN OTHERS => RETURN "----------------------------";  
 			end case;
-			
 			WHEN 5 =>
+			case temp_instr_reg (7 downto 4) is 
 				when "0000" => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "11" & "000" & temp_instr_reg(3) & "0000" & '1'; --store regC into register
 				when "0001" => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "11" & "000" & temp_instr_reg(3) & "0000" & '1'; --store regC into register
 				when "0010" =>
@@ -160,7 +159,7 @@ begin
 						when '1' => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "11" & '0' & temp_instr_reg(2 downto 0) & "0000" & '1'; --store value C into reg
 						WHEN OTHERS => RETURN "----------------------------";
 					end case;
-				when "0010" =>
+				when "0011" =>
 					case temp_instr_reg (3) is
 						when '0' => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "11" & '0' & temp_instr_reg(2 downto 0) & "0000" & '1'; --store value C into reg
 						when '1' => return '0' & '0' & "00" & "00" & "00" & "00" & '0' & '0' & "000" & "00" & "11" & '0' & temp_instr_reg(2 downto 0) & "0000" & '1'; --store value C into reg
@@ -168,6 +167,8 @@ begin
 					end case;
 				when "1000" => return '0' & '0' & "00" & "00" & "10" & "00" & '0' & '0' & "000" & "00" & "11" & '0' & temp_instr_reg(2 downto 0) & "0000"  & '1'; --store load into reg
 				when "1001" => return '0' & '1' & "10" & "10" & "00" & "10" & '0' & '0' & "000" & "11" & "00" & "0000" & "0000" & '1'; --store value in mem with address+2 and last 3 bits
+				WHEN OTHERS => RETURN "----------------------------";  
+			end case;
         	WHEN OTHERS => RETURN "----------------------------";      
       END CASE;
     END control_lines_instr;
@@ -229,26 +230,26 @@ begin
 			WHEN "1101" => RETURN NOT "1011110";
 			WHEN "1110" => RETURN NOT "1111001";
 			when "1111" => RETURN NOT "1110001";
-			WHEN OTHERS => RETURN NOT "1000000"	-- this part chenaged, when other would give "-"
+			WHEN OTHERS => RETURN NOT "1000000";	-- this part chenaged, when other would give "-"
 		END CASE;
 	END hex2display;
 	begin
 		CASE current_disp_out is
 			WHEN 1=>
-				dig2 <= hex_2display(register_A(3 downto 0));
-				dig3 <=hex_2display(register_A(7 downto 4));
+				dig2 <= hex2display(register_A(3 downto 0));
+				dig3 <=hex2display(register_A(7 downto 4));
 			WHEN 2=>
-				dig2 <= hex_2display(register_B(3 downto 0));
-				dig3 <=hex_2display(register_B(7 downto 4));
+				dig2 <= hex2display(register_B(3 downto 0));
+				dig3 <=hex2display(register_B(7 downto 4));
 			WHEN 3=>
-				dig2 <= hex_2display(register_C(3 downto 0));
-				dig3 <=hex_2display(register_C(7 downto 4));
+				dig2 <= hex2display(register_C(3 downto 0));
+				dig3 <=hex2display(register_C(7 downto 4));
 			WHEN 4=>
-				dig2 <= hex_2display(register_LOAD(3 downto 0));
-				dig3 <=hex_2display(register_LOAD(7 downto 4));
+				dig2 <= hex2display(register_LOAD(3 downto 0));
+				dig3 <=hex2display(register_LOAD(7 downto 4));
 			WHEN 5=>
-				dig2 <= hex_2display(register_instr(3 downto 0));
-				dig3 <=hex_2display(register_instr(7 downto 4));
+				dig2 <= hex2display(instr_reg(3 downto 0));
+				dig3 <=hex2display(instr_reg(7 downto 4));
 		END case;
 	end outputdisplay;
 	
@@ -275,6 +276,8 @@ begin
 		control_lines := (others =>	'0');
 		update_outputs(control_lines);
 		previous_debug1 := '1';
+		previous_debug0 := '1';
+		switch := '0';
 		gotonextcycle := '0';
 		
     ELSIF rising_edge(clk) THEN
