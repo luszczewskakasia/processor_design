@@ -60,7 +60,9 @@ begin
 	
 	begin
 		if reset = '0' then
-			dout <= (others => '0');
+			dout <= (others => '-');
+			dig4 <= (others => '-');
+			dig5 <= (others => '-');
 			
 			
 		elsif rising_edge(clk) then

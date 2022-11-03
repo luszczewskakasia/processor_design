@@ -7,14 +7,13 @@ ENTITY reg IS
 		din     	: IN std_logic_vector(18 DOWNTO 0);
 		a_add		: IN std_logic_vector(3 DOWNTO 0);
 		b_add		: IN std_logic_vector(3 DOWNTO 0);
-		rw_reg_off 	: IN std_logic_vector(1 downto 0);
-		clk     	: IN std_logic;
-		reset		: IN std_logic;
-		app_input	: IN std_logic_vector (9 downto 0);
+		rw_reg_off 	: IN std_logic_vector(1 downto 0);--
+		clk     	: IN std_logic;--
+		reset		: IN std_logic;--
+		app_input	: IN std_logic_vector (9 downto 0);--
 		
 		dig0		: OUT std_logic_vector (6 downto 0);
-		dig1		: OUT std_logic_vector (6 downto 0);
-		dig2		: OUT std_logic_vector (6 downto 0);		
+		dig1		: OUT std_logic_vector (6 downto 0);		
 		a_out		: OUT std_logic_vector(18 DOWNTO 0);
 		b_out		: OUT std_logic_vector(18 DOWNTO 0)
 	);
@@ -59,11 +58,15 @@ begin
 	begin
 		if reset = '0' then
 			for i in 1 to 7 loop
-				reg(i-1) <= (others => '0'); 					-- initializing r0 ~ r6 as 0
+				reg(i-1) <= (others => '-'); 					-- initializing r0 ~ r6 as 0
 			end loop;
 			
-			reg(8) <= (others => '0'); 							-- initializing pc:reg(8) as 0
+			reg(8) <= (others => '-'); 							-- initializing pc:reg(8) as 0
 			reg(7) <= std_logic_vector(to_unsigned(1,19));   	-- initializing r7 as 1
+			dig0 <= (others => '-');
+			dig1 <= (others => '-');
+			a_out <= (others => '-');
+			b_out <= (others => '-');
 			
 		elsif rising_edge(clk) then
 				

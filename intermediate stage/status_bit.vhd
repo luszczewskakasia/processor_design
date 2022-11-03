@@ -11,10 +11,11 @@ End status_bit;
 
 Architecture bhv of status_bit Is
 begin
-process(clk,ctrl)
+process(ctrl,clk)
 begin 
-  
-     if rising_edge(clk) then
+     if (reset ='0') then
+	Control<='0';
+     elsif rising_edge(clk) then
        if(ctrl ='0') then 
           Control<= ALU;
      end if;
