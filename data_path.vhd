@@ -12,7 +12,7 @@ entity data_path is
 		clk     			: IN std_logic;
 		reset				: IN std_logic;
 		-- from control to datapath
-		alu_instru			: IN std_logic_vector (2 downto 0);
+		alu_instr			: IN std_logic_vector (2 downto 0);
 		demux_mem			: IN std_logic;
 		demux_A				: IN std_logic;
 		demux_B				: IN std_logic_vector (1 downto 0);
