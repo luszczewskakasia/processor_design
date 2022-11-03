@@ -19,7 +19,7 @@ entity data_path is
 		mux_mem				: IN std_logic_vector (1 downto 0);
 		mux_reg				: IN std_logic_vector (1 downto 0);
 		address_add			: IN std_logic_vector (1 downto 0);
-		enable_instru		: IN std_logic;
+		enable_instr		: IN std_logic;
 		enable_status_bit	: IN std_logic;
 		rw_reg_off 			: IN std_logic_vector (1 downto 0);
 		address_A_reg		: IN std_logic_vector (3 DOWNTO 0);
@@ -164,6 +164,13 @@ begin
 		load_register => se_reg	
 		);
 		
+	instr:entity work.instruction_register port map(
+		Data_In => instr_register,
+		clk => clk,
+		reset => reset,
+		ctrl => enable_instr,
+		Data_Out => instruction_data_out	
+		);
 		
 		
 		
