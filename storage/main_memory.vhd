@@ -12,13 +12,13 @@ ENTITY main_memory IS
     reset  			: IN std_logic;
     clk     		: IN std_logic;
 	rw_mem_off		: IN std_logic_vector (1 downto 0); -- if '10' - read, '11'- write, '00' - disable
-	din				: IN std_logic_vector (addr_w-1 downto 0);
-	address			: IN std_logic_vector (reg_w-1  downto 0);
+	din				: IN std_logic_vector (7 downto 0);
+	address			: IN std_logic_vector (18  downto 0);
 	app_input		: IN std_logic_vector (8 downto 0);
 	
 	dig4 			: OUT std_logic_vector (6 downto 0); -- for debug
 	dig5 			: OUT std_logic_vector (6 downto 0); -- for debug
-    dout    		: OUT std_logic_vector(addr_w-1 downto 0)
+    dout    		: OUT std_logic_vector(7 downto 0)
   );
 END main_memory;
 
@@ -48,15 +48,15 @@ FUNCTION hex2display (n:std_logic_vector(3 DOWNTO 0)) RETURN std_logic_vector IS
     END CASE;
   END hex2display;
 
-TYPE mem_block IS ARRAY (0 TO (2**reg_w)-1) OF std_logic_vector(addr_w-1 DOWNTO 0);
+TYPE mem_block IS ARRAY (0 TO (2**8)-1) OF std_logic_vector(7 DOWNTO 0);
   SIGNAL mem: mem_block;
 
 begin
 	process(clk,reset)
 	
 	variable pre_dig4, pre_dig5 : std_logic_vector (3 downto 0);
-	variable temp :	std_logic_vector(addr_w-1 DOWNTO 0);
-	variable debug_out : std_logic_vector (reg_w-1 downto 0);
+	variable temp :	std_logic_vector(7 DOWNTO 0);
+	variable debug_out : std_logic_vector (18 downto 0);
 	
 	begin
 		if reset = '0' then
