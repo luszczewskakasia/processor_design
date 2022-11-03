@@ -10,15 +10,15 @@ Port(Data_In : IN std_logic_vector(18 DOWNTO 0);
 End register_C;
 
 Architecture bhv of register_C Is
+
 begin
 process(clk,ctrl)
 begin 
-     if(reset='0') then
-	Data_Out<=(OTHERS=>'0');
+     if (reset= '0') THEN 
+	Data_Out<= (OTHERS => '0');
      elsif rising_edge(clk) then
        if(ctrl ='0') then 
           Data_Out<= Data_In;
-       
        end if;
      end if;
 end process;
