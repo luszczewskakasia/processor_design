@@ -172,11 +172,12 @@ begin
 		Data_Out => instruction_data_out	
 		);
 		
+	mux_mem:entity work.mux_memory port map(
+		a0_18 => A2MM,
+		ctrl => mux_mem,
+		memory => memory_data_out	
+		);
 		
-		
-		
-		
-
 	reg_A <= reg_A_out
 	reg_B <= reg_B_out
 	reg_C <= reg_C_out
