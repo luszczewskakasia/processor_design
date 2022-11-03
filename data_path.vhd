@@ -189,7 +189,7 @@ begin
 	reg_C <= reg_C_out
 	reg_load <= load_register
 
-
+END;
 
 
 -- a,b,c, load should be output of datapath.
