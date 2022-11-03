@@ -33,8 +33,6 @@ entity data_path is
 		-- led display output
 		dig0				: OUT std_logic_vector (6 downto 0);
 		dig1				: OUT std_logic_vector (6 downto 0);	
-		dig4 				: OUT std_logic_vector (6 downto 0);
-		dig5 				: OUT std_logic_vector (6 downto 0);
 		address_mem			: OUT std_logic_vector (reg_w-1  downto 0); -- address from adder to memory
 		
 		
