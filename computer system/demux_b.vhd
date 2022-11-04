@@ -12,7 +12,7 @@ End demux_b;
 Architecture bhv of demux_b Is
 signal empty: std_logic_vector(18 DOWNTO 0);
 begin
-demux : process(ctrl)
+demux : process(ctrl, B_register)
 begin 
     if(ctrl = "00") then 
     ALU_input_B <= B_register;
