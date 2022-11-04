@@ -35,7 +35,7 @@ FUNCTION hex2display (n:std_logic_vector(3 DOWNTO 0)) RETURN std_logic_vector IS
 	    WHEN "0111" => RETURN NOT "0000111";
 	    WHEN "1000" => RETURN NOT "1111111";
 	    WHEN "1001" => RETURN NOT "1101111";
-	    WHEN "1010" => RETURN NOT "1110111";
+	    WHEN "1010" => RETURN NOT "1110111";	
 	    WHEN "1011" => RETURN NOT "1111100";
 	    WHEN "1100" => RETURN NOT "0111001";
 	    WHEN "1101" => RETURN NOT "1011110";
@@ -45,25 +45,12 @@ FUNCTION hex2display (n:std_logic_vector(3 DOWNTO 0)) RETURN std_logic_vector IS
     END CASE;
   END hex2display;
 TYPE regs IS ARRAY (0 TO 2**4) OF std_logic_vector(18 DOWNTO 0);
-  SIGNAL reg: regs;
+  SIGNAL reg: regs:= (6 downto 0 => (others=>'0'),7 => std_logic_vector(to_unsigned(1,19)), 8 => (others=>'0'), 16 downto 9 => (others=>'-')) ;
   	
 	--signal reg_status : std_logic_vector (1 downto 0);
 	
 	
 begin
-
-reg(0) <= (others => '0');
-reg(1) <= (others => '0');
-reg(2) <= (others => '0');
-reg(3) <= (others => '0');
-reg(4) <= (others => '0');
-reg(5) <= (others => '0');
-reg(6) <= (others => '0');
-reg(7) <= std_logic_vector(to_unsigned(1,19));
-reg(8) <= (others => '0');
-
-
-
 	process(clk,reset)
 	
 	variable pre_dig0, pre_dig1 : std_logic_vector (3 downto 0);
@@ -92,12 +79,14 @@ reg(8) <= (others => '0');
 				b_out <= reg(to_integer(unsigned(b_add)));		
 				
 			elsif rw_reg_off = "11" then						-- write, always to A address.
-				if a_add /= "0111" then							-- when write address is not r7.
+				if (a_add /= "0111") then							-- when write address is not r7.
 					reg(to_integer(unsigned(a_add))) <= din;
 					a_out <= (others => '-');
-					b_out <= (others => '-');	
-				else											-- if writing address is r7. make sure r7 is always 1.
+					b_out <= (others => '-');
+					
+				elsif (a_add = "0111") then										-- if writing address is r7. make sure r7 is always 1.
 					reg(to_integer(unsigned(a_add))) <= std_logic_vector(to_unsigned(1,19));
+					
 				end if;
 			
 			elsif rw_reg_off = "01" then
