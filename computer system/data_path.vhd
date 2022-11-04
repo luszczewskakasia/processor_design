@@ -180,7 +180,7 @@ begin
 		
 	eadder:entity work.adder port map(
 		Data_In => to_adder,
-		Data_Out => address_mem,
+		S => address_mem,
 		ctrl => address_add		
 		);
 		
