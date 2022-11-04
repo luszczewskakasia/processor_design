@@ -241,8 +241,8 @@ begin
 	begin
 		CASE current_disp_out is
 			WHEN 1=>
-				dig2 <= hex2display(register_A(3 downto 0));
-				dig3 <=hex2display(register_A(7 downto 4));
+				dig2 <= hex2display(register_LOAD(3 downto 0));
+				dig3 <=hex2display(register_LOAD(7 downto 4));
 			WHEN 2=>
 				dig2 <= hex2display(register_B(3 downto 0));
 				dig3 <=hex2display(register_B(7 downto 4));
@@ -260,7 +260,7 @@ begin
 	
 	TYPE STATES IS (PREP, RUN_INSTR, FIRST_CLOCK_CYCLE);
     VARIABLE curr_state: states := FIRST_CLOCK_CYCLE;
-	VARIABLE curr_clock_cycle: integer range 1 to 10 := 1;
+	VARIABLE curr_clock_cycle: integer range 1 to 9 := 1;
 	VARIABLE control_lines: std_logic_vector (27 downto 0) := (others =>	'0');
 	
 	variable previous_debug1 : std_logic := '1'; --active LOW

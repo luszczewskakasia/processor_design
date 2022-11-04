@@ -8,7 +8,7 @@ ENTITY computer_system IS
     clk        : IN std_logic; --high freq. clock (~ 50 MHz)
 	
 	--inputs and outputs 
-    dig0, dig1,dig2, dig3, dig4, dig5 : OUT STD_LOGIC_VECTOR(6 DOWNTO 0); -- show key pressed on display
+    dig0, dig1, dig2, dig3, dig4, dig5 : OUT STD_LOGIC_VECTOR(6 DOWNTO 0); -- show key pressed on display
 	reset      : IN std_logic; --
 	debug 		: IN std_logic_vector(2 downto 0);
 	app_input : IN std_logic_vector (9 downto 0)
