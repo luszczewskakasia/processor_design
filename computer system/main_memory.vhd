@@ -49,9 +49,14 @@ FUNCTION hex2display (n:std_logic_vector(3 DOWNTO 0)) RETURN std_logic_vector IS
   END hex2display;
 
 TYPE mem_block IS ARRAY (0 TO (2**8)-1) OF std_logic_vector(7 DOWNTO 0);
-  SIGNAL mem: mem_block;
+  SIGNAL mem: mem_block	;
+	
 
 begin
+mem(0) <= "00011111";
+mem(1) <= "10100001";
+mem(2) <= "11111111";
+
 	process(clk,reset)
 	
 	variable pre_dig4, pre_dig5 : std_logic_vector (3 downto 0);
@@ -63,6 +68,8 @@ begin
 			dout <= (others => '-');
 			dig4 <= (others => '-');
 			dig5 <= (others => '-');
+			
+			
 			
 			
 		elsif rising_edge(clk) then
