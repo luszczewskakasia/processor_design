@@ -129,7 +129,7 @@ begin
 				when "1000" => return '0' & '0' & "10" & "00" & "00" & "00" & '0' & '0' & "000" & "10" & "00" & "0000" & "0000"  & '0'; --ask mem for data
 				when "1001" => return '0' & '1' & "10" & "00" & "00" & "00" & '0' & '0' & "000" & "11" & "10" & "000" & temp_instr_reg(3) & '0' & temp_instr_reg(2 downto 0) & '0'; --load regA (value) and regB (address) and save output a and b reg in register a and B and store value in mem
 				when "1010" => return '0' & '0' & "01" & "00" & "01" & "00" & '0' & '0' & "000" & "00" & "11" & '0' & temp_instr_reg (3 downto 1) & "0000" & '1'; --save register B into register file
-				when "1011" => return '0' & '0' & "01" & "00" & "01" & "00" & '0' & '0' & "000" & "00" & "11" & "000" & temp_instr_reg (3) & "0000" & '1'; --save register B into register file
+				when "1011" => return '0' & '0' & "01" & "00" & "01" & "00" & '0' & '0' & "000" & "00" & "11" & "000" & temp_instr_reg (0) & "0000" & '1'; --save register B into register file
 				WHEN OTHERS => RETURN "----------------------------";  
 			end case;
         	WHEN 4 => 
