@@ -49,13 +49,10 @@ FUNCTION hex2display (n:std_logic_vector(3 DOWNTO 0)) RETURN std_logic_vector IS
   END hex2display;
 
 TYPE mem_block IS ARRAY (0 TO (2**8)-1) OF std_logic_vector(7 DOWNTO 0);
-  SIGNAL mem: mem_block	;
+  SIGNAL mem: mem_block:= (0 => "00011111", 1 => "10100001", 2=> "11111111", 255 downto 3 => (others => '0'));
 	
 
 begin
-mem(0) <= "00011111";
-mem(1) <= "10100001";
-mem(2) <= "11111111";
 
 	process(clk,reset)
 	
