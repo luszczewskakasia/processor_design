@@ -1,14 +1,14 @@
 LIBRARY IEEE;
 USE IEEE.STD_LOGIC_1164.ALL;
-ENTITY carry_look_up_adder IS
+ENTITY adder IS
   PORT (
     Data_IN : IN std_logic_vector(18 DOWNTO 0);
     ctrl : IN std_logic_vector(1 DOWNTO 0);
     S             : OUT std_logic_vector(18 DOWNTO 0)
     );
-END carry_look_up_adder;
+END adder;
 
-ARCHITECTURE bhv OF carry_look_up_adder IS
+ARCHITECTURE bhv OF adder IS
 
 	SIGNAL c_buf : std_logic_vector(19 DOWNTO 0) := (OTHERS => '0');
 	SIGNAL temp_S, p, g : std_logic_vector(18 DOWNTO 0) := (OTHERS => '0');

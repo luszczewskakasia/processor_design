@@ -72,15 +72,16 @@ TYPE mem_block IS ARRAY (0 TO (2**8)-1) OF std_logic_vector(7 DOWNTO 0);
   19=> x"1F", 
   20=> x"50", 
   21=> x"2E", 
-  22=> x"B8",
+  22=> x"B4",
   23=> x"65", 
   24 => x"BD",
   25=> x"21",   
   26=> x"1E",
-  27=> x"1F",
+  27> x"1F",
   28=> x"AD",
-  29=> x"65",
-  255 downto 30 => (others => '0'));
+  29=> x"B8",
+  30=> x"65",
+  255 downto 31 => (others => '0'));
 
 	
 

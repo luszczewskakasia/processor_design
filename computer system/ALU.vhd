@@ -23,6 +23,7 @@ BEGIN
 		IF reset='0' THEN
 			ALU_status := '0';
 		ELSIF rising_edge(clk) THEN
+		status_bit <= '0';
 			IF ALU_status = '0' THEN
 				ALU_status := '1';
 			ELSE
@@ -31,8 +32,6 @@ BEGIN
 						ALU_res := A + B; 
 						if (A+B)="0000000000000000000" THEN
 							status_bit <= '1';
-						else 
-							status_bit <= '0'; 
 						end if;
 					WHEN "001" => -- NAND
 						ALU_res := A NAND B;
