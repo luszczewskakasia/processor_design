@@ -260,7 +260,7 @@ begin
 	
 	TYPE STATES IS (PREP, RUN_INSTR, FIRST_CLOCK_CYCLE);
     VARIABLE curr_state: states := FIRST_CLOCK_CYCLE;
-	VARIABLE curr_clock_cycle: integer range 1 to 9 := 1;
+	VARIABLE curr_clock_cycle: integer range 1 to 10 := 1;
 	VARIABLE control_lines: std_logic_vector (27 downto 0) := (others =>	'0');
 	
 	variable previous_debug1 : std_logic := '1'; --active LOW

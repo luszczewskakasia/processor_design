@@ -58,10 +58,10 @@ begin
 	begin
 		if reset = '0' then
 			for i in 1 to 7 loop
-				reg(i-1) <= (others => '-'); 					-- initializing r0 ~ r6 as 0
+				reg(i-1) <= (others => '0'); 					-- initializing r0 ~ r6 as 0
 			end loop;
 			
-			reg(8) <= (others => '-'); 							-- initializing pc:reg(8) as 0
+			reg(8) <= (others => '0'); 							-- initializing pc:reg(8) as 0
 			reg(7) <= std_logic_vector(to_unsigned(1,19));   	-- initializing r7 as 1
 			dig0 <= (others => '-');
 			dig1 <= (others => '-');
@@ -72,7 +72,7 @@ begin
 				
 			pre_dig0 := reg(0)(3 downto 0);pre_dig1 := reg(0)(7 downto 4);
 			dig0 <= hex2display(pre_dig0);dig1 <= hex2display(pre_dig1);
-																-- showing r6 to dig0, dig1
+																-- showing r0 to dig0, dig1
 			
 			if rw_reg_off = "10" then 							-- read
 				a_out <= reg(to_integer(unsigned(a_add)));
