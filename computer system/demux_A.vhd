@@ -10,7 +10,7 @@ END demux_A;
 
 Architecture bhv of demux_A Is
 begin
-process(A_register)
+process(A_register, ctrl)
 begin 
     if(ctrl = '0') then 
     ALU_input_A <= A_register;
