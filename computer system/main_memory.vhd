@@ -14,7 +14,7 @@ ENTITY main_memory IS
 	rw_mem_off		: IN std_logic_vector (1 downto 0); -- if '10' - read, '11'- write, '00' - disable
 	din				: IN std_logic_vector (7 downto 0);
 	address			: IN std_logic_vector (18  downto 0);
-	app_input		: IN std_logic_vector (8 downto 0);
+	app_input		: IN std_logic_vector (9 downto 0);
 	
 	dig4 			: OUT std_logic_vector (6 downto 0); -- for debug
 	dig5 			: OUT std_logic_vector (6 downto 0); -- for debug
@@ -44,7 +44,7 @@ FUNCTION hex2display (n:std_logic_vector(3 DOWNTO 0)) RETURN std_logic_vector IS
 	    WHEN "1101" => RETURN NOT "1011110";
 	    WHEN "1110" => RETURN NOT "1111001";
 		when "1111" => RETURN NOT "1110001";
-	    WHEN OTHERS => RETURN NOT "1000000"	-- this part changed, when other would give "-"
+	    WHEN OTHERS => RETURN NOT "1000000";	-- this part changed, when other would give "-"
     END CASE;
   END hex2display;
 
