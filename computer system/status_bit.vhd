@@ -16,7 +16,7 @@ begin
      if (reset ='0') then
 	Control<='0';
      elsif rising_edge(clk) then
-       if(ctrl ='0') then 
+       if(ctrl ='1') then 
           Control<= ALU;
      end if;
      end if;
