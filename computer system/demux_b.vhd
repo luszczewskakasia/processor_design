@@ -11,7 +11,7 @@ End demux_b;
 
 Architecture bhv of demux_b Is
 begin
-demux : process(ctrl)
+demux : process(B_register)
 begin 
     if(ctrl = "00") then 
     ALU_input_B <= B_register;
