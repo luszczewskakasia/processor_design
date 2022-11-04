@@ -131,7 +131,7 @@ begin
 	emux_reg: entity work.mux_register port map (
 		ALU => reg_C_out,
 		B_register => main_register,
-		load_register => load_register
+		load_register => load_register,
 		ctrl => mux_reg,
 		b => reg_din		
 		);
@@ -184,10 +184,10 @@ begin
 		ctrl => address_add		
 		);
 		
-	reg_A <= reg_A_out
-	reg_B <= reg_B_out
-	reg_C <= reg_C_out
-	reg_load <= load_register
+	reg_A <= reg_A_out;
+	reg_B <= reg_B_out;
+	reg_C <= reg_C_out;
+	reg_load <= load_register;
 
 END;
 
