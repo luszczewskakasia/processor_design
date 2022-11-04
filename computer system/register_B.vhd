@@ -17,7 +17,7 @@ begin
      if (reset= '0') THEN 
 	Data_Out<= (OTHERS => '0');
      elsif rising_edge(clk) then
-       if(ctrl ='0') then 
+       if(ctrl ='1') then 
           Data_Out<= Data_In;
        end if;
      end if;
