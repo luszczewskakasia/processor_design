@@ -12,9 +12,9 @@ Architecture bhv of demux_memory Is
 begin
 process(ctrl)
 begin 
-    if(ctrl = '0') then 
+    if(ctrl = "0") then 
     instruction_register <= memory;
-    elsif(ctrl = '1') then
+    elsif(ctrl = "1") then
     load_register <= memory;
     end if;
 End process;

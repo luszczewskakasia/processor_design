@@ -131,7 +131,7 @@ begin
 	emux_reg: entity work.mux_register port map (
 		ALU => reg_C_out,
 		B_register => main_register,
-		load_register => load_register,
+		load_register => load_register
 		ctrl => mux_reg,
 		b => reg_din		
 		);
