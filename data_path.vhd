@@ -90,7 +90,7 @@ begin
 	regi_B : entity work.register_B port map (
 		clk => clk,
 		reset => reset,
-		Data_In => a_out,
+		Data_In => b_out,
 		ctrl => enable_reg,
 		Data_Out =>reg_B_out
 		);
