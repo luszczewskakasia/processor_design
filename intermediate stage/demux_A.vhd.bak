@@ -12,9 +12,9 @@ Architecture bhv of demux_A Is
 begin
 process(ctrl)
 begin 
-    if(ctrl = '0') then 
+    if(ctrl = "0") then 
     ALU_input_A <= A_register;
-    elsif(ctrl ='1') then 
+    elsif(ctrl ="1") then 
     memory <= A_register;
     end if;
 End process;
