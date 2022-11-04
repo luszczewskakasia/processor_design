@@ -1,29 +1,46 @@
-Library IEEE;
-use IEEE.std_logic_1164.all;
-use Ieee.numeric_std_unsigned.all;
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
+ENTITY carry_look_up_adder IS
+  PORT (
+    Data_IN : IN std_logic_vector(18 DOWNTO 0);
+    ctrl : IN std_logic_vector(1 DOWNTO 0);
+    Ci              : IN std_logic; -- carry input
+    S, C             : OUT std_logic_vector(18 DOWNTO 0)
+    );
+END carry_look_up_adder;
 
-Entity adder Is
-Port(Data_In: IN std_logic_vector(18 DOWNTO 0);
-     Data_Out: Out std_logic_vector(18 DOWNTO 0);
-     ctrl: IN std_logic_vector(1 DOWNTO 0));
-     
-End adder;
+ARCHITECTURE bhv OF carry_look_up_adder IS
 
-Architecture bhv of adder Is
+	SIGNAL c_buf : std_logic_vector(19 DOWNTO 0) := (OTHERS => '0');
+	SIGNAL temp_S, p, g : std_logic_vector(18 DOWNTO 0) := (OTHERS => '0');
+	signal A : std_logic_vector(18 DOWNTO 0);
+	signal B : std_logic_vector(18 DOWNTO 0);
+        signal add0: std_logic_vector(18 DOWNTO 0) :="0000000000000000000";
+	signal add1: std_logic_vector(18 DOWNTO 0) :="0000000000000000001";
+	signal add2: std_logic_vector(18 DOWNTO 0) :="0000000000000000010";
+BEGIN
+	A <= Data_In;
+	B <= add0 when (ctrl="00") else
+             add1 when (ctrl="01") else
+             add2 when (ctrl="10");
+	temp_S <= A XOR B;
+	p <= A OR B;
+	g <= A AND B;
+	carry: process(c_buf, p, g)
+	BEGIN
+		IF Ci = '0' THEN
+			c_buf(0) <= '0';
+		ELSIF Ci = '1' THEN
+			c_buf(0) <= '1';
+		END IF;
 
+		cll: FOR i IN 0 to 18 LOOP
+			c_buf(i+1) <= g(i) OR (p(i) AND c_buf(i));
+		END LOOP;
 
-begin 
-process(ctrl)
-begin 
-	if (ctrl="00") then
-	  Data_Out <= Data_In;
-	elsif (ctrl="01") then
-	  Data_Out <= Data_In + 1;
-	elsif( ctrl="10") then
-	  Data_Out<= Data_In + 2;
-	end if; 
-	
-end process;
-end bhv;
+	END PROCESS; 
+	C <= c_buf(18 DOWNTO 0);
+	S <= temp_S XOR c_buf(18 DOWNTO 0);
+END;
 
  
