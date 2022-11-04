@@ -40,8 +40,8 @@ ARCHITECTURE bhv OF processor IS
 	signal int_register_A : std_logic_vector (18 downto 0);
 	signal int_register_B : std_logic_vector (18 downto 0);
 	signal int_register_C : std_logic_vector (18 downto 0);
-	signal int_register_load :std_logic_vector (18 downto 0);
-	signal int_mux_mem : std_logic_vector (1 downto 0);
+	signal int_register_load :std_logic_vector (7 downto 0);
+	signal int_mux_mem : std_logic_vector (2 downto 0);
 
 	
 BEGIN 
@@ -81,11 +81,11 @@ dp: ENTITY work.data_path PORT MAP (
 		demux_mem => int_demux_mem,
 		demux_A	=> int_demux_A,
 		demux_B	=> int_demux_B,
-		mux_mem	=> int_mux_mem,
+		mux_mem	=> writetomem,
 		mux_reg	=> int_mux_reg, 			
 		address_add	=> int_address_add,		
 		enable_instr => int_enable_instr,		
-		enable_status_bit => int_enable_status_bit,	
+		enable_status_bit => int_status_bit,	
 		rw_reg_off => int_rw_reg_off,
 		status_bit => int_status_bit,
 		address_A_reg => int_address_A_reg,
