@@ -14,6 +14,28 @@ ENTITY ALU IS
 END ALU;
 
 ARCHITECTURE bhv OF ALU IS
+FUNCTION Sum(	X : std_logic_vector; -- for input A
+			Y : std_logic_vector) return std_logic_vector IS -- for input B
+	VARIABLE c_buf          : std_logic_vector(19 DOWNTO 0); -- temporary c
+	VARIABLE temp_S, p, g   : std_logic_vector(18 DOWNTO 0) := (OTHERS => '0');
+	BEGIN
+		temp_S := X XOR Y;
+		p := X OR Y;
+		g := X AND Y;
+		c_buf(0) := '0';
+		cll: FOR i IN 0 to 18 LOOP
+			c_buf(i+1) := g(i) OR (p(i) AND c_buf(i)); -- c(i+1) = g(i) + (p(i)c(i)
+		END LOOP; 
+	RETURN temp_S XOR c_buf(18 DOWNTO 0);
+
+	END FUNCTION;
+
+COMPONENT CLA4
+  PORT (
+    a, b             : IN std_logic_vector(18 DOWNTO 0); -- coming from the register file
+    s, c             : OUT std_logic_vector(18 DOWNTO 0)
+    );
+END COMPONENT;
 
 BEGIN
 	PROCESS(clk, reset, A, B, ALU_instr)
@@ -29,8 +51,8 @@ BEGIN
 			ELSE
 				CASE(ALU_instr) IS
 					WHEN "000" => -- ADD
-						ALU_res := A + B; 
-						if (A+B)="0000000000000000000" THEN
+						ALU_res := Sum(X => A, Y => B); 
+						if Sum(X => A, Y => B)="0000000000000000000" THEN
 							status_bit <= '1';
 						end if;
 					WHEN "001" => -- NAND
