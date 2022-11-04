@@ -10,7 +10,7 @@ END demux_memory;
 
 Architecture bhv of demux_memory Is
 begin
-process(memory)
+process(memory, ctrl)
 begin 
     if(ctrl = '0') then 
     instruction_register <= memory;
