@@ -33,7 +33,7 @@ entity data_path is
 		-- led display output
 		dig0				: OUT std_logic_vector (6 downto 0);
 		dig1				: OUT std_logic_vector (6 downto 0);	
-		address_mem			: OUT std_logic_vector (7  downto 0); -- address from adder to memory
+		address_mem			: OUT std_logic_vector (18 downto 0); -- address from adder to memory
 		status_bit			: OUT std_logic;					-- status bit from datapath to control
 		memory_data_out		: OUT std_logic_vector (7 downto 0); -- data from mux_memory to memory
 		instruction_data_out: OUT std_logic_vector (7 downto 0); -- data from instruction to control
@@ -60,9 +60,9 @@ architecture bhv of data_path is
 	signal reg_C_in			: std_logic_vector(18 DOWNTO 0); 	-- reg_C_out -> Data_In (register_C)
 	signal status_bit_ALU	: std_logic;		-- staus_bit_ALu -> ALU (status_bit)
 	signal reg_C_out		: std_logic_vector(18 DOWNTO 0);	-- reg_C_out -> ALU (mux_register)
-	signal load_register 	: std_logic_vector(7 DOWNTO 0); 	-- Data_Out -> load_register(load)
+	signal load_register 	: std_logic_vector(18 DOWNTO 0); 	-- Data_Out -> load_register(load)
 	signal signextend_reg	: std_logic_vector(18 DOWNTO 0); 	-- signextend_reg -> Data_In (sign_extend)
-	signal se_reg			: std_logic_vector(18 DOWNTO 0);	-- load_register -> se_reg (demux_mem)
+	signal se_reg			: std_logic_vector(7 DOWNTO 0);		-- load_register -> se_reg (demux_mem)
 	signal instr_register	: std_logic_vector(7 DOWNTO 0);		-- instr_register -> Data_In (instruction_reg)
 	
 	
