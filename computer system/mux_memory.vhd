@@ -13,7 +13,7 @@ signal a0_7: std_logic_vector(7 DOWNTO 0);
 signal a8_15: std_logic_vector(7 DOWNTO 0);
 signal a16_19: std_logic_vector(2 DOWNTO 0);
 signal a16_19_f: std_logic_vector(7 DOWNTO 0);
-
+signal dash: std_logic_vector(7 DOWNTO 0):="--------";
 
 begin
 process(a16_19, a0_18)
@@ -30,6 +30,8 @@ begin
 end process;
             memory <= a0_7 when (ctrl="00") else
             a8_15 when (ctrl="01") else
-            a16_19_f when (ctrl="10");
+            a16_19_f when (ctrl="10")else
+            dash when (ctrl="11");
+            
+
 End bhv;
-          
