@@ -76,7 +76,9 @@ begin
 		b_add => address_B_reg,
 		din => reg_din,
 		a_out => a_out,
-		b_out => b_out
+		b_out => b_out,
+		dig0 => dig0,
+		dig1 => dig1
 		);
 	
 	regi_A : entity work.register_A port map (
