@@ -51,6 +51,19 @@ TYPE regs IS ARRAY (0 TO 2**4) OF std_logic_vector(18 DOWNTO 0);
 	
 	
 begin
+
+reg(0) <= (others => '0');
+reg(1) <= (others => '0');
+reg(2) <= (others => '0');
+reg(3) <= (others => '0');
+reg(4) <= (others => '0');
+reg(5) <= (others => '0');
+reg(6) <= (others => '0');
+reg(7) <= std_logic_vector(to_unsigned(1,19));
+reg(8) <= (others => '0');
+
+
+
 	process(clk,reset)
 	
 	variable pre_dig0, pre_dig1 : std_logic_vector (3 downto 0);
