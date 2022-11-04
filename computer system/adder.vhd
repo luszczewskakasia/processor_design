@@ -4,8 +4,8 @@ ENTITY carry_look_up_adder IS
   PORT (
     Data_IN : IN std_logic_vector(18 DOWNTO 0);
     ctrl : IN std_logic_vector(1 DOWNTO 0);
-    Ci              : IN std_logic; -- carry input
-    S, C             : OUT std_logic_vector(18 DOWNTO 0)
+    Ci: IN std_logic;
+    S             : OUT std_logic_vector(18 DOWNTO 0)
     );
 END carry_look_up_adder;
 
@@ -18,6 +18,7 @@ ARCHITECTURE bhv OF carry_look_up_adder IS
         signal add0: std_logic_vector(18 DOWNTO 0) :="0000000000000000000";
 	signal add1: std_logic_vector(18 DOWNTO 0) :="0000000000000000001";
 	signal add2: std_logic_vector(18 DOWNTO 0) :="0000000000000000010";
+	signal C: std_logic_vector(18 DOWNTO 0);
 BEGIN
 	A <= Data_In;
 	B <= add0 when (ctrl="00") else
@@ -42,5 +43,3 @@ BEGIN
 	C <= c_buf(18 DOWNTO 0);
 	S <= temp_S XOR c_buf(18 DOWNTO 0);
 END;
-
- 
