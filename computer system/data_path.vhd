@@ -64,7 +64,7 @@ architecture bhv of data_path is
 	signal signextend_reg	: std_logic_vector(18 DOWNTO 0); 	-- signextend_reg -> Data_In (sign_extend)
 	signal se_reg			: std_logic_vector(7 DOWNTO 0);		-- load_register -> se_reg (demux_mem)
 	signal instr_register	: std_logic_vector(7 DOWNTO 0);		-- instr_register -> Data_In (instruction_reg)
-	
+	signal dummy			: std_logic_vector (18 downto 0);
 	
 begin
 	REG : entity work.reg port map (
@@ -109,7 +109,8 @@ begin
 		ctrl => demux_B,
 		ALU_input_B => Alu_B,
 		main_register => main_register,
-		memory => to_adder
+		memory => to_adder,
+		dummy => dummy
 		);
 		
 	eALU: entity work.ALU port map(
@@ -135,7 +136,8 @@ begin
 		B_register => main_register,
 		load_register => load_register,
 		ctrl => mux_reg,
-		b => reg_din		
+		b => reg_din,
+		dummy => dummy
 		);
 		
 	ests_bit: entity work.status_bit port map (

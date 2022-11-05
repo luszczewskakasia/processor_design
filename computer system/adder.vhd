@@ -2,9 +2,9 @@ LIBRARY IEEE;
 USE IEEE.STD_LOGIC_1164.ALL;
 ENTITY adder IS
   PORT (
-    Data_IN : IN std_logic_vector(18 DOWNTO 0);
-    ctrl : IN std_logic_vector(1 DOWNTO 0);
-    S             : OUT std_logic_vector(18 DOWNTO 0)
+    Data_IN	: IN std_logic_vector(18 DOWNTO 0);
+    ctrl	: IN std_logic_vector(1 DOWNTO 0);
+    S       : OUT std_logic_vector(18 DOWNTO 0)
     );
 END adder;
 
@@ -14,7 +14,7 @@ ARCHITECTURE bhv OF adder IS
 	SIGNAL temp_S, p, g : std_logic_vector(18 DOWNTO 0) := (OTHERS => '0');
 	signal A : std_logic_vector(18 DOWNTO 0);
 	signal B : std_logic_vector(18 DOWNTO 0);
-        signal add0: std_logic_vector(18 DOWNTO 0) :="0000000000000000000";
+    signal add0: std_logic_vector(18 DOWNTO 0) :="0000000000000000000";
 	signal add1: std_logic_vector(18 DOWNTO 0) :="0000000000000000001";
 	signal add2: std_logic_vector(18 DOWNTO 0) :="0000000000000000010";
 	signal C: std_logic_vector(18 DOWNTO 0);
@@ -23,11 +23,13 @@ BEGIN
 	A <= Data_In;
 	B <= add0 when (ctrl="00") else
              add1 when (ctrl="01") else
-             add2 when (ctrl="10");
+             add2 when (ctrl="10") else
+			 (others => '0');
 	temp_S <= A XOR B;
 	p <= A OR B;
 	g <= A AND B;
 	carry: process(c_buf, p, g)
+	
 	BEGIN
 		IF Ci = '0' THEN
 			c_buf(0) <= '0';
