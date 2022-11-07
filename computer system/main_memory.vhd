@@ -48,6 +48,7 @@ FUNCTION hex2display (n:std_logic_vector(3 DOWNTO 0)) RETURN std_logic_vector IS
     END CASE;
   END hex2display;
 
+
 TYPE mem_block IS ARRAY (0 TO (2**8)-1) OF std_logic_vector(7 DOWNTO 0);
   SIGNAL mem: mem_block:= (
   0 => x"BF",
@@ -91,6 +92,7 @@ TYPE mem_block IS ARRAY (0 TO (2**8)-1) OF std_logic_vector(7 DOWNTO 0);
   38=> x"AD",
   39=> x"65",
   255 downto 40 => (others => '0'));
+
 
 	
 

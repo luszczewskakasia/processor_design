@@ -345,6 +345,7 @@ begin
 			
 		else
 			enable_reg <= '1'; --disable registers so no normal operation (A, B, c and LOAD)
+			control_lines := (others =>	'0');
 		end if;
 		
 		outputdisplay(current_disp_out); --change dig2 and dig3 to the value of the selected register
