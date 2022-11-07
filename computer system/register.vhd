@@ -44,8 +44,8 @@ FUNCTION hex2display (n:std_logic_vector(3 DOWNTO 0)) RETURN std_logic_vector IS
 	    WHEN OTHERS => RETURN NOT "1000000";	-- this part changed, when other would give "-"
     END CASE;
   END hex2display;
-TYPE regs IS ARRAY (0 TO 2**4) OF std_logic_vector(18 DOWNTO 0);
-  SIGNAL reg: regs:= (6 downto 0 => (others=>'0'),7 => std_logic_vector(to_unsigned(1,19)), 8 => (others=>'0'), 16 downto 9 => (others=>'-')) ;
+TYPE regs IS ARRAY (0 TO (2**4)-1) OF std_logic_vector(18 DOWNTO 0);
+  SIGNAL reg: regs:= (6 downto 0 => (others=>'0'),7 => std_logic_vector(to_unsigned(1,19)), 8 => (others=>'0'), 15 downto 9 => (others=>'-')) ;
   	
 	--signal reg_status : std_logic_vector (1 downto 0);
 	

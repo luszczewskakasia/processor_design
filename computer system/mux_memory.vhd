@@ -16,7 +16,7 @@ signal a16_19	: std_logic_vector(2 DOWNTO 0);
 signal a16_19_f	: std_logic_vector(7 DOWNTO 0);
 
 begin
-	process(a0_18, ctrl)
+	process(a0_18,a0_7,a8_15,a16_19,a16_19_f, ctrl)
 	begin
 		a0_7	<=a0_18(7 DOWNTO 0);
 		a8_15	<=a0_18(15 DOWNTO 8);

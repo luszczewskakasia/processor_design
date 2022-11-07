@@ -12,7 +12,7 @@ End register_A;
 Architecture bhv of register_A Is
 
 begin
-process(clk,ctrl)
+process(clk,ctrl,reset)
 begin 
      if (reset= '0') THEN 
 	Data_Out<= (OTHERS => '0');

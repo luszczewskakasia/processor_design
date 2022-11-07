@@ -11,7 +11,7 @@ End status_bit;
 
 Architecture bhv of status_bit Is
 begin
-process(ctrl,clk)
+process(ctrl,clk,reset)
 begin 
      if (reset ='0') then
 	Control<='0';

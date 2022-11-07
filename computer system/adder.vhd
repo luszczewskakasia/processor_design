@@ -14,21 +14,18 @@ ARCHITECTURE bhv OF adder IS
 	SIGNAL temp_S, p, g : std_logic_vector(18 DOWNTO 0) := (OTHERS => '0');
 	signal A : std_logic_vector(18 DOWNTO 0);
 	signal B : std_logic_vector(18 DOWNTO 0);
-    signal add0: std_logic_vector(18 DOWNTO 0) :="0000000000000000000";
-	signal add1: std_logic_vector(18 DOWNTO 0) :="0000000000000000001";
-	signal add2: std_logic_vector(18 DOWNTO 0) :="0000000000000000010";
 	signal C: std_logic_vector(18 DOWNTO 0);
 	signal Ci: std_logic;
 BEGIN
 	A <= Data_In;
-	B <= add0 when (ctrl="00") else
-             add1 when (ctrl="01") else
-             add2 when (ctrl="10") else
+	B <= "0000000000000000000" when (ctrl="00") else
+             "0000000000000000001" when (ctrl="01") else
+             "0000000000000000010" when (ctrl="10") else
 			 (others => '0');
 	temp_S <= A XOR B;
 	p <= A OR B;
 	g <= A AND B;
-	carry: process(c_buf, p, g)
+	carry: process(c_buf, p, g,ci)
 	
 	BEGIN
 		IF Ci = '0' THEN
