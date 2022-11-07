@@ -14,7 +14,6 @@ ARCHITECTURE bhv OF adder IS
 	SIGNAL temp_S, p, g : std_logic_vector(18 DOWNTO 0) := (OTHERS => '0');
 	signal A : std_logic_vector(18 DOWNTO 0);
 	signal B : std_logic_vector(18 DOWNTO 0);
-	signal C: std_logic_vector(18 DOWNTO 0);
 	signal Ci: std_logic;
 BEGIN
 	A <= Data_In;
@@ -39,6 +38,5 @@ BEGIN
 		END LOOP;
 
 	END PROCESS; 
-	C <= c_buf(18 DOWNTO 0);
 	S <= temp_S XOR c_buf(18 DOWNTO 0);
 END;
