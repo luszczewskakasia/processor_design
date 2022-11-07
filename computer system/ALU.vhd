@@ -38,7 +38,7 @@ COMPONENT CLA4
 END COMPONENT;
 
 BEGIN
-	PROCESS(clk, reset, A, B, ALU_instr)
+	PROCESS(clk, reset)
 	variable ALU_res : std_logic_vector (18 DOWNTO 0); 
 	VARIABLE ALU_status : std_logic; -- this variable is for the reset
 	BEGIN	
