@@ -261,7 +261,7 @@ begin
 	
 	variable previous_debug0 : std_logic := '1';
 	variable switch	: std_logic := '0';
-	variable current_disp_out : integer range 1 to 5 := 1;
+	variable current_disp_out : integer range 1 to 2 := 1;
 	
 	CONSTANT debugging_onoff : std_logic := '1'; -- 1 means debugging is on and 0 means debugging is off
 	
@@ -313,6 +313,7 @@ begin
 					IF  (control_lines(0) = '1') THEN
 						curr_state := RUN_INSTR;
 						curr_clock_cycle := 1;
+						gotonextcycle := '0'; --make the variable 0 again.
 					ELSE
 						curr_clock_cycle := curr_clock_cycle + 1;
 					END IF;
@@ -332,8 +333,9 @@ begin
 						END IF;
 					ELSE 
 						control_lines := (others =>	'0');
+						gotonextcycle := '0';
 					END IF;
-					
+
 				WHEN OTHERS =>
 					--when unspecified behaviour occurs reset the processor
 					curr_clock_cycle := 1;
@@ -342,7 +344,7 @@ begin
 			END CASE;
 			
 		else
-			enable_reg <= '0'; --disable registers so no normal operation (A, B, c and LOAD)
+			enable_reg <= '1'; --disable registers so no normal operation (A, B, c and LOAD)
 		end if;
 		
 		outputdisplay(current_disp_out); --change dig2 and dig3 to the value of the selected register
