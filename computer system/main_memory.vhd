@@ -50,37 +50,11 @@ FUNCTION hex2display (n:std_logic_vector(3 DOWNTO 0)) RETURN std_logic_vector IS
 
 TYPE mem_block IS ARRAY (0 TO (2**8)-1) OF std_logic_vector(7 DOWNTO 0);
   SIGNAL mem: mem_block:= (
-  0 => x"BF",
-  1 => x"09",
-  2=> x"1F", 
-  3=> x"1E", 
-  4=> x"57",
-  5=> x"47",
-  6=> x"FF",
-  7=> x"B9", 
-  8=> x"1F", 
-  9=> x"A9", 
-  10=> x"BF", 
-  11=> x"0E", 
-  12=> x"09", 
-  13=> x"BA", 
-  14=> x"17", 
-  15=> x"17",   
-  16=> x"17", 
-  17=> x"09",
-  18=> x"1F", 
-  19=> x"1F", 
-  20=> x"50", 
-  21=> x"2E", 
-  22=> x"B8",
-  23=> x"65", 
-  24 => x"BD",
-  25=> x"21",   
-  26=> x"1E",
-  27=> x"1F",
-  28=> x"AD",
-  29=> x"65",
-  255 downto 30 => (others => '0'));
+  0 => x"10",
+  1 => x"50",
+  2 => x"60",
+  3 => x"FF",
+  255 downto 4 => (others => '0'));
 
 	
 

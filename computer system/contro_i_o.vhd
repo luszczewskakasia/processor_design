@@ -286,7 +286,7 @@ begin
 		end if;
 		
 		if (switch) = '1' THEN 
-			if (current_disp_out = 5) THEN 
+			if (current_disp_out = 2) THEN 
 				current_disp_out := 1;
 			ELSE 
 				current_disp_out := current_disp_out + 1;
@@ -342,7 +342,7 @@ begin
 			END CASE;
 			
 		else
-			enable_reg <= '1'; --disable registers so no normal operation (A, B, c and LOAD)
+			enable_reg <= '0'; --disable registers so no normal operation (A, B, c and LOAD)
 		end if;
 		
 		outputdisplay(current_disp_out); --change dig2 and dig3 to the value of the selected register
