@@ -243,20 +243,11 @@ begin
 	begin
 		CASE current_disp_out is
 			WHEN 1=>
-				dig2 <= hex2display(register_A(3 downto 0));
-				dig3 <=hex2display(register_A(7 downto 4));
-			WHEN 2=>
-				dig2 <= hex2display(register_B(3 downto 0));
-				dig3 <=hex2display(register_B(7 downto 4));
-			WHEN 3=>
-				dig2 <= hex2display(register_C(3 downto 0));
-				dig3 <=hex2display(register_C(7 downto 4));
-			WHEN 4=>
-				dig2 <= hex2display(register_LOAD(3 downto 0));
-				dig3 <=hex2display(register_LOAD(7 downto 4));
-			WHEN 5=>
 				dig2 <= hex2display(instr_reg(3 downto 0));
 				dig3 <=hex2display(instr_reg(7 downto 4));
+			WHEN OTHERS=>
+				dig2 <= hex2display("000" & status_bit_reg);
+				dig3 <=hex2display("0000");
 		END case;
 	end outputdisplay;
 	
@@ -335,6 +326,7 @@ begin
 						IF  (control_lines(0) = '1') THEN
 							curr_state := PREP;
 							curr_clock_cycle := 1;
+							gotonextcycle := '0'; --make the variable 0 again.
 						ELSE
 							curr_clock_cycle := curr_clock_cycle + 1;
 						END IF;
@@ -357,7 +349,6 @@ begin
 		update_outputs(control_lines);	--output all the values (convert 28 bit vector to smaller ones)
 		previous_debug1 := debug(1); --update previousdebug value
 		previous_debug0 := debug(0); --update previousdebug value
-		gotonextcycle := '0'; --make the variable 0 again.
 		switch := '0'; --make the variable 0 again.
     END IF;
 	
